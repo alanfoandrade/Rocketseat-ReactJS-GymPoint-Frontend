@@ -2,7 +2,7 @@ import React from 'react';
 import { Switch } from 'react-router-dom';
 import Route from './Route';
 
-import Signin from '../pages/Signin';
+import Login from '../pages/Login';
 
 import AddStudent from '../pages/Student/Add';
 import ListStudent from '../pages/Student/List';
@@ -57,7 +57,7 @@ export default function Routes() {
       <Route path="/dashboard/aluno/editar" component={EditStudent} isPrivate />
       <Route path="/dashboard/aluno" exact component={ListStudent} isPrivate />
 
-      <Route path="/" exact component={Signin} />
+      <Route path="/" exact component={Login} />
 
       <Route path="/" component={() => <h1>Ops, 404!!</h1>} />
     </Switch>
