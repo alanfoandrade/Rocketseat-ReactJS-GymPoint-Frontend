@@ -1,5 +1,7 @@
 import { createGlobalStyle } from 'styled-components';
 
+import colors from './colors';
+
 // import 'react-perfect-scrollbar/dist/css/styles.css';
 // import 'react-toastify/dist/ReactToastify.css';
 
@@ -19,6 +21,7 @@ export default createGlobalStyle`
 
 html, body, #root {
   height: 100%;
+  background: ${colors.watermelon}
 }
 
 body {
