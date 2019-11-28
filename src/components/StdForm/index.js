@@ -2,6 +2,6 @@ import React from 'react';
 
 // import { Container } from './styles';
 
-export default function HeaderForm() {
+export default function StdForm() {
   return <div />;
 }
