@@ -2,6 +2,6 @@ import React from 'react';
 
 // import { Container } from './styles';
 
-export default function Notifications() {
-  return <div />;
+export default function List() {
+  return <h1>Lista Matriculas</h1>;
 }

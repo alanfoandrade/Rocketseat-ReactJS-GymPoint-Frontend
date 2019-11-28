@@ -3,5 +3,5 @@ import React from 'react';
 // import { Container } from './styles';
 
 export default function Add() {
-  return <div />;
+  return <h1>Cadastra Plano</h1>;
 }
