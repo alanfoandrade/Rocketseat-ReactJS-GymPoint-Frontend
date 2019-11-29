@@ -1,13 +1,11 @@
 import React from 'react';
 
-import FormLayout from '../../_layouts/stdForm';
+import DefaultLayout from '../../_layouts/default';
 
-// import { Container } from './styles';
-
-export default function Edit() {
+export default function Add() {
   return (
-    <FormLayout>
+    <DefaultLayout screenTitle="Edição de Aluno" btnBack btnSave>
       <h1>Editar Aluno</h1>
-    </FormLayout>
+    </DefaultLayout>
   );
 }

@@ -1,13 +1,11 @@
 import React from 'react';
 
-import FormLayout from '../../_layouts/stdForm';
-
-// import { Container } from './styles';
+import DefaultLayout from '../../_layouts/default';
 
 export default function Edit() {
   return (
-    <FormLayout>
+    <DefaultLayout screenTitle="Edição de Matrícula" btnBack btnSave>
       <h1>Edita Matricula</h1>
-    </FormLayout>
+    </DefaultLayout>
   );
 }

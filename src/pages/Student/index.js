@@ -1,11 +1,21 @@
 import React from 'react';
 
-import api from '../../services/api';
+import DefaultLayout from '../_layouts/default';
 
-// import { Container } from './styles';
+import api from '../../services/api';
 
 export default function List() {
   api.get('students');
 
-  return <h1>Lista Alunos</h1>;
+  return (
+    <DefaultLayout
+      screenTitle="Gerenciando Alunos"
+      navSession="aluno"
+      btnAdd
+      searchBox
+      largeList
+    >
+      <h1>Lista Alunos</h1>
+    </DefaultLayout>
+  );
 }

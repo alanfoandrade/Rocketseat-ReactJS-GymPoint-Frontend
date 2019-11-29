@@ -1,13 +1,11 @@
 import React from 'react';
 
-import FormLayout from '../../_layouts/stdForm';
-
-// import { Container } from './styles';
+import DefaultLayout from '../../_layouts/default';
 
 export default function Add() {
   return (
-    <FormLayout>
+    <DefaultLayout screenTitle="Cadastro de Plano" btnBack btnSave>
       <h1>Cadastra Plano</h1>
-    </FormLayout>
+    </DefaultLayout>
   );
 }

@@ -1,22 +1,32 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Container, Content, Profile } from './styles';
+import { Container, HeaderContent, Profile, NavMenu } from './styles';
 
 import logo from '../../assets/images/logo-small.svg';
+
+const ActiveStyle = {
+  color: '#444444',
+};
 
 export default function Header() {
   return (
     <Container>
-      <Content>
+      <HeaderContent>
         <nav>
           <img src={logo} alt="GymPoint" />
 
-          <Link selected to="/dashboard/aluno">
+          <NavMenu activeStyle={ActiveStyle} to="/dashboard/aluno">
             ALUNOS
-          </Link>
-          <Link to="/dashboard/plano">PLANOS</Link>
-          <Link to="/dashboard/matricula">MATRÍCULAS</Link>
-          <Link to="/dashboard/ajuda">PEDIDOS DE AUXÍLIO</Link>
+          </NavMenu>
+          <NavMenu activeStyle={ActiveStyle} to="/dashboard/plano">
+            PLANOS
+          </NavMenu>
+          <NavMenu activeStyle={ActiveStyle} to="/dashboard/matricula">
+            MATRÍCULAS
+          </NavMenu>
+          <NavMenu activeStyle={ActiveStyle} to="/dashboard/ajuda">
+            PEDIDOS DE AUXÍLIO
+          </NavMenu>
         </nav>
 
         <aside>
@@ -27,7 +37,7 @@ export default function Header() {
             </div>
           </Profile>
         </aside>
-      </Content>
+      </HeaderContent>
     </Container>
   );
 }

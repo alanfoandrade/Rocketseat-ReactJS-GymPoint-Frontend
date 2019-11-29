@@ -1,7 +1,16 @@
 import React from 'react';
 
-// import { Container } from './styles';
+import DefaultLayout from '../_layouts/default';
 
 export default function List() {
-  return <h1>Lista Planos</h1>;
+  return (
+    <DefaultLayout
+      screenTitle="Gerenciando Planos"
+      navSession="plano"
+      btnAdd
+      searchBox
+    >
+      <h1>Lista Planos</h1>
+    </DefaultLayout>
+  );
 }

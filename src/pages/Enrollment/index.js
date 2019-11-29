@@ -1,7 +1,17 @@
 import React from 'react';
 
-// import { Container } from './styles';
+import DefaultLayout from '../_layouts/default';
 
 export default function List() {
-  return <h1>Lista Matriculas</h1>;
+  return (
+    <DefaultLayout
+      screenTitle="Gerenciando Matrículas"
+      navSession="matricula"
+      btnAdd
+      searchBox
+      largeList
+    >
+      <h1>Lista Matrículas</h1>
+    </DefaultLayout>
+  );
 }

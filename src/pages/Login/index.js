@@ -6,6 +6,7 @@ import * as Yup from 'yup';
 import { signInRequest } from '../../store/modules/auth/actions';
 
 import logo from '../../assets/images/logo-big.svg';
+import AuthLayout from '../_layouts/auth';
 
 const schema = Yup.object().shape({
   email: Yup.string()
@@ -25,9 +26,8 @@ export default function Login() {
   }
 
   return (
-    <>
+    <AuthLayout>
       <img src={logo} alt="GymPoint" />
-
       <Form schema={schema} onSubmit={handleSubmit}>
         <h1>SEU E-MAIL</h1>
         <Input name="email" type="email" placeholder="E-mail cadastrado" />
@@ -38,6 +38,6 @@ export default function Login() {
           {loading ? 'Carregando...' : 'Entrar no sistema'}
         </button>
       </Form>
-    </>
+    </AuthLayout>
   );
 }
