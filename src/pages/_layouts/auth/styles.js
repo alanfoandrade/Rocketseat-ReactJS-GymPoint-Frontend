@@ -16,7 +16,7 @@ export const Container = styled.div`
   width: 360px;
   min-height: 450px;
   overflow: auto;
-  background: #fff;
+  background: #ffffff;
   border-radius: 4px;
   box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
   padding: 30px;
@@ -38,7 +38,7 @@ export const Container = styled.div`
     h1 {
       font-size: 14px;
       font-weight: bold;
-      color: ${colors.title};
+      color: #444444;
       margin-top: 15px;
     }
 
@@ -46,14 +46,14 @@ export const Container = styled.div`
       width: 100%;
       height: 45px;
       border-radius: 4px;
-      border: solid 1px ${colors.border};
+      border: solid 1px #dddddd;
       font-size: 16px;
-      color: ${colors.text};
+      color: #666666;
       margin-top: 8px;
       padding: 13px 15px;
 
       &::placeholder {
-        color: ${colors.placeholder};
+        color: #999999;
       }
     }
 
@@ -71,7 +71,7 @@ export const Container = styled.div`
       border-radius: 4px;
       background-color: ${colors.watermelon};
       border: none;
-      color: #fff;
+      color: #ffffff;
       font-size: 16px;
       font-weight: bold;
       transition: background 0.2s;

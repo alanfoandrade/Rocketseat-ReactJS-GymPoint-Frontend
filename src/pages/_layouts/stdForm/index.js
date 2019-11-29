@@ -1,7 +1,18 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
-// import { Container } from './styles';
+import FormHeader from '../../../components/FormHeader';
+import { Wrapper, Container } from './styles';
 
-export default function StdForm() {
-  return <div />;
+export default function FormLayout({ children }) {
+  return (
+    <Wrapper>
+      <FormHeader />
+      <Container>{children}</Container>
+    </Wrapper>
+  );
 }
+
+FormLayout.propTypes = {
+  children: PropTypes.element.isRequired,
+};

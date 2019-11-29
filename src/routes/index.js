@@ -5,18 +5,18 @@ import Route from './Route';
 import Login from '../pages/Login';
 
 import AddStudent from '../pages/Student/Add';
-import ListStudent from '../pages/Student/List';
+import ListStudent from '../pages/Student';
 import EditStudent from '../pages/Student/Edit';
 
 import AddPlan from '../pages/Plan/Add';
-import ListPlan from '../pages/Plan/List';
+import ListPlan from '../pages/Plan';
 import EditPlan from '../pages/Plan/Edit';
 
 import AddEnrollment from '../pages/Enrollment/Add';
-import ListEnrollment from '../pages/Enrollment/List';
+import ListEnrollment from '../pages/Enrollment';
 import EditEnrollment from '../pages/Enrollment/Edit';
 
-import ListHelpOrder from '../pages/HelpOrder/List';
+import ListHelpOrder from '../pages/HelpOrder';
 
 export default function Routes() {
   return (
