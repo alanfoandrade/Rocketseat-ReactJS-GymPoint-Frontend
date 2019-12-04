@@ -2,17 +2,15 @@ import styled from 'styled-components';
 
 import { NavLink } from 'react-router-dom';
 
-import colors from '../../styles/colors';
-
 export const Container = styled.div`
   background: #fff;
+  min-width: ${props => (props.largeList ? '1300px' : '1000px')};
   padding: 0 30px;
   border-bottom: solid 1px #dddddd;
 `;
 export const HeaderContent = styled.div`
   height: 64px;
-  max-width: 1290px;
-  min-width: 900px;
+  max-width: 1440px;
   margin: 0 auto;
   display: flex;
   justify-content: space-between;
@@ -21,6 +19,7 @@ export const HeaderContent = styled.div`
   nav {
     display: flex;
     align-items: center;
+    min-width: 700px;
 
     img {
       margin-right: 30px;
@@ -39,21 +38,18 @@ export const NavMenu = styled(NavLink)`
 
 export const Profile = styled.div`
   display: flex;
+  flex-direction: column;
+  text-align: right;
 
-  div {
-    text-align: right;
-    margin-right: 10;
+  strong {
+    color: #666;
+  }
 
-    strong {
-      display: block;
-      color: #666;
-    }
-
-    a {
-      display: block;
-      font-size: 14px;
-      margin-top: 2px;
-      color: ${colors.red};
-    }
+  button {
+    border: 0;
+    background: none;
+    font-size: 14px;
+    margin-top: 2px;
+    color: #de3b3b;
   }
 `;

@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 export const Content = styled.div``;
 
-export const HelpOrderTable = styled.table`
+export const PlanTable = styled.table`
   width: 100%;
 
   th {
@@ -27,7 +27,32 @@ export const HelpOrderTable = styled.table`
     }
   }
 
+  #name-title {
+    width: 30%;
+  }
+
+  #length-title {
+    text-align: center;
+    width: 30%;
+  }
+
+  #length-plan {
+    text-align: center;
+  }
+
+  #price-title {
+    text-align: center;
+  }
+
+  #price-plan {
+    text-align: center;
+  }
+
   div a {
     color: #4d85ee;
+  }
+  & a + a {
+    margin-left: 23px;
+    color: #de3b3b;
   }
 `;

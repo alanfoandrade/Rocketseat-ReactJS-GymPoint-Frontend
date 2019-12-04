@@ -20,8 +20,8 @@ export default function DefaultLayout(props) {
 
   return (
     <>
-      <Header />
-      <Wrapper>
+      <Header largeList={largeList} />
+      <Wrapper largeList={largeList}>
         <Content>
           <OptionsHeader
             btnBack={btnBack}

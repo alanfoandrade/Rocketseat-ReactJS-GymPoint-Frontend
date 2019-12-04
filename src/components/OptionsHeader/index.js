@@ -10,7 +10,6 @@ import {
   SaveButton,
   AddButton,
   SearchBox,
-  SearchButton,
 } from './styles';
 
 export default function OptionsHeader(props) {
@@ -28,26 +27,30 @@ export default function OptionsHeader(props) {
     <Container largeList={largeList}>
       <Content>
         <h1>{screenTitle}</h1>
-        <div>
-          <BackButton onClick={() => history.goBack()} visible={btnBack}>
+
+        <aside>
+          <BackButton visible={btnBack} onClick={() => history.goBack()}>
             <MdKeyboardArrowLeft color="#fff" size={27} /> VOLTAR
           </BackButton>
-          <SaveButton onClick={() => {}} visible={btnSave}>
-            <MdCheck color="#fff" size={21} /> SALVAR
+
+          <SaveButton form="handler" type="submit" visible={btnSave}>
+            <MdCheck color="#fff" size={22} /> SALVAR
           </SaveButton>
+
           <AddButton
-            onClick={() => history.push(`/dashboard/${navSession}/cadastrar`)}
             visible={btnAdd}
+            onClick={() => history.push(`/dashboard/${navSession}/cadastrar`)}
           >
-            <MdAdd color="#fff" size={21} /> CADASTRAR
+            <MdAdd color="#fff" size={22} /> CADASTRAR
           </AddButton>
-          <SearchBox visible={searchBox}>
-            <SearchButton visible={searchBox} onClick={() => {}}>
-              <MdSearch size={20} />
-            </SearchButton>
+
+          <SearchBox visible={searchBox} onSubmit={() => {}}>
+            <button type="submit">
+              <MdSearch color="#999" size={20} />
+            </button>
             <Input name="search" type="search" placeholder="Buscar por nome" />
           </SearchBox>
-        </div>
+        </aside>
       </Content>
     </Container>
   );

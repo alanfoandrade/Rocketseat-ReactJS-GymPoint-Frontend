@@ -4,23 +4,28 @@ import Route from './Route';
 
 import Login from '../pages/Login';
 
-import AddStudent from '../pages/Student/Add';
+import HandleStudent from '../pages/Student/HandleStudent';
 import ListStudent from '../pages/Student';
-import EditStudent from '../pages/Student/Edit';
 
-import AddPlan from '../pages/Plan/Add';
+import HandlePlan from '../pages/Plan/HandlePlan';
 import ListPlan from '../pages/Plan';
-import EditPlan from '../pages/Plan/Edit';
 
-import AddEnrollment from '../pages/Enrollment/Add';
+import HandleEnrollment from '../pages/Enrollment/HandleEnrollment';
 import ListEnrollment from '../pages/Enrollment';
-import EditEnrollment from '../pages/Enrollment/Edit';
 
 import ListHelpOrder from '../pages/HelpOrder';
+import AnswerHelpOrder from '../pages/HelpOrder/Answer';
 
 export default function Routes() {
   return (
     <Switch>
+      <Route
+        path="/dashboard/ajuda/responder"
+        exact
+        component={AnswerHelpOrder}
+        isPrivate
+      />
+
       <Route
         path="/dashboard/ajuda"
         exact
@@ -30,12 +35,12 @@ export default function Routes() {
 
       <Route
         path="/dashboard/matricula/cadastrar"
-        component={AddEnrollment}
+        component={HandleEnrollment}
         isPrivate
       />
       <Route
         path="/dashboard/matricula/editar"
-        component={EditEnrollment}
+        component={HandleEnrollment}
         isPrivate
       />
       <Route
@@ -45,16 +50,24 @@ export default function Routes() {
         isPrivate
       />
 
-      <Route path="/dashboard/plano/cadastrar" component={AddPlan} isPrivate />
-      <Route path="/dashboard/plano/editar" component={EditPlan} isPrivate />
+      <Route
+        path="/dashboard/plano/cadastrar"
+        component={HandlePlan}
+        isPrivate
+      />
+      <Route path="/dashboard/plano/editar" component={HandlePlan} isPrivate />
       <Route path="/dashboard/plano" exact component={ListPlan} isPrivate />
 
       <Route
         path="/dashboard/aluno/cadastrar"
-        component={AddStudent}
+        component={HandleStudent}
         isPrivate
       />
-      <Route path="/dashboard/aluno/editar" component={EditStudent} isPrivate />
+      <Route
+        path="/dashboard/aluno/editar"
+        component={HandleStudent}
+        isPrivate
+      />
       <Route path="/dashboard/aluno" exact component={ListStudent} isPrivate />
 
       <Route path="/" exact component={Login} />

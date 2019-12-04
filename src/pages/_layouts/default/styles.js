@@ -2,11 +2,11 @@ import styled from 'styled-components';
 
 export const Wrapper = styled.div`
   height: 100%;
-  overflow: auto;
   background: #f5f5f5;
   display: flex;
   flex-direction: column;
   align-items: center;
+  min-width: ${props => (props.largeList ? '1300px' : '1000px')};
 `;
 
 export const Content = styled.div`

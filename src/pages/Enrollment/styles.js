@@ -2,12 +2,12 @@ import styled from 'styled-components';
 
 export const Content = styled.div``;
 
-export const HelpOrderTable = styled.table`
+export const EnrollmentTable = styled.table`
   width: 100%;
 
   th {
     color: #444;
-    text-align: left;
+    text-align: center;
   }
 
   tr:last-child td {
@@ -21,13 +21,27 @@ export const HelpOrderTable = styled.table`
     line-height: 1.25;
     padding: 15px 0;
     border-bottom: 1px solid #eee;
+    text-align: center;
 
     div {
       text-align: right;
     }
   }
 
+  #student-title {
+    width: 30%;
+    text-align: left;
+  }
+
+  #name-student {
+    text-align: left;
+  }
+
   div a {
     color: #4d85ee;
+  }
+  & a + a {
+    margin-left: 23px;
+    color: #de3b3b;
   }
 `;

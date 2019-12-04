@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 export const Content = styled.div``;
 
-export const HelpOrderTable = styled.table`
+export const StudentTable = styled.table`
   width: 100%;
 
   th {
@@ -27,7 +27,29 @@ export const HelpOrderTable = styled.table`
     }
   }
 
+  #name-title {
+    width: 45%;
+  }
+
+  #email-title {
+    width: 35%;
+  }
+
+  #age-title {
+    padding-right: 150px;
+    text-align: center;
+  }
+
+  #age-student {
+    padding-right: 150px;
+    text-align: center;
+  }
+
   div a {
     color: #4d85ee;
+  }
+  & a + a {
+    margin-left: 23px;
+    color: #de3b3b;
   }
 `;

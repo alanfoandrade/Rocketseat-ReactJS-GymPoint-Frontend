@@ -1,11 +1,13 @@
 import styled from 'styled-components';
 
+import { Form } from '@rocketseat/unform';
+
 import { darken } from 'polished';
 
 import colors from '../../styles/colors';
 
 export const Container = styled.div`
-  min-width: ${props => (props.largeList ? '1100px' : '900px')};
+  min-width: ${props => (props.largeList ? '1200px' : '900px')};
 `;
 
 export const Content = styled.div`
@@ -20,7 +22,7 @@ export const Content = styled.div`
     color: #444;
   }
 
-  div {
+  aside {
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -98,35 +100,31 @@ export const AddButton = styled.button`
   }
 `;
 
-export const SearchBox = styled.div`
-  position: relative;
+export const SearchBox = styled(Form)`
+  display: ${props => (props.visible ? 'flex' : 'none')};
+  height: 36px;
+  background: #fff;
+  border: 1px solid #eee;
+  border-radius: 4px;
+  padding: 0 10px;
+  align-items: center;
+  justify-content: center;
+
+  button {
+    display: flex;
+    align-items: center;
+    background: none;
+    border: 0;
+  }
 
   input {
-    display: ${props => (props.visible ? 'flex' : 'none')};
-    flex: 1;
-    width: 240px;
-    height: 36px;
-    border-radius: 4px;
-    border: solid 1px #dddddd;
+    margin-left: 5px;
+    border: 0;
     font-size: 14px;
-    padding: 10px 16px 10px 35px;
     color: #666666;
 
     &::placeholder {
       color: #999999;
     }
-  }
-`;
-
-export const SearchButton = styled.button`
-  display: ${props => (props.visible ? 'flex' : 'none')};
-  background: none;
-  border: 0;
-  align-items: center;
-
-  svg {
-    color: #999999;
-    position: absolute;
-    left: 10px;
   }
 `;

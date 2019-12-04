@@ -5,17 +5,16 @@ import colors from '../../../styles/colors';
 
 export const Wrapper = styled.div`
   height: 100%;
-  overflow: auto;
   background: ${colors.watermelon};
   display: flex;
   justify-content: center;
   align-items: center;
+  overflow: auto;
 `;
 
 export const Container = styled.div`
   width: 360px;
   min-height: 450px;
-  overflow: auto;
   background: #ffffff;
   border-radius: 4px;
   box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);

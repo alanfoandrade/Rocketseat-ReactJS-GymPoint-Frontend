@@ -1,6 +1,8 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
+import PropTypes from 'prop-types';
 import { Container, HeaderContent, Profile, NavMenu } from './styles';
+import { signOut } from '../../store/modules/auth/actions';
 
 import logo from '../../assets/images/logo-small.svg';
 
@@ -8,9 +10,18 @@ const ActiveStyle = {
   color: '#444444',
 };
 
-export default function Header() {
+export default function Header(props) {
+  const { largeList } = props;
+
+  const dispatch = useDispatch();
+  const profile = useSelector(state => state.provider.profile);
+
+  function handleSignOut() {
+    dispatch(signOut());
+  }
+
   return (
-    <Container>
+    <Container largeList={largeList}>
       <HeaderContent>
         <nav>
           <img src={logo} alt="GymPoint" />
@@ -31,13 +42,21 @@ export default function Header() {
 
         <aside>
           <Profile>
-            <div>
-              <strong>Alan Andrade</strong>
-              <Link to="/">sair do sistema</Link>
-            </div>
+            <strong>{profile.name}</strong>
+            <button type="button" onClick={handleSignOut}>
+              sair do sistema
+            </button>
           </Profile>
         </aside>
       </HeaderContent>
     </Container>
   );
 }
+
+Header.propTypes = {
+  largeList: PropTypes.bool,
+};
+
+Header.defaultProps = {
+  largeList: false,
+};
