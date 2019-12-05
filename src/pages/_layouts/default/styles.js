@@ -6,7 +6,7 @@ export const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  min-width: ${props => (props.largeList ? '1300px' : '1000px')};
+  min-width: ${props => (props.largeList ? '1200px' : '900px')};
 `;
 
 export const Content = styled.div`
@@ -14,6 +14,7 @@ export const Content = styled.div`
 `;
 
 export const Container = styled.div`
+  max-width: ${props => (props.largeList ? '1200px' : '900px')};
   border-radius: 4px;
   background-color: #ffffff;
   padding: 30px;

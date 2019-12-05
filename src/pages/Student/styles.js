@@ -45,11 +45,19 @@ export const StudentTable = styled.table`
     text-align: center;
   }
 
-  div a {
-    color: #4d85ee;
-  }
-  & a + a {
-    margin-left: 23px;
-    color: #de3b3b;
+  div {
+    display: flex;
+    justify-content: flex-end;
+
+    a {
+      color: #4d85ee;
+    }
+    button {
+      border: 0;
+      background: none;
+      margin-left: 23px;
+      font-size: 16px;
+      color: #de3b3b;
+    }
   }
 `;

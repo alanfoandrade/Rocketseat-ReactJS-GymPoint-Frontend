@@ -7,7 +7,7 @@ export const PlanTable = styled.table`
 
   th {
     color: #444;
-    text-align: left;
+    text-align: center;
   }
 
   tr:last-child td {
@@ -20,6 +20,7 @@ export const PlanTable = styled.table`
     font-size: 16px;
     line-height: 1.25;
     padding: 15px 0;
+    text-align: center;
     border-bottom: 1px solid #eee;
 
     div {
@@ -27,32 +28,32 @@ export const PlanTable = styled.table`
     }
   }
 
-  #name-title {
+  #plan-title {
+    text-align: left;
     width: 30%;
+  }
+
+  #plan-name {
+    text-align: left;
   }
 
   #length-title {
-    text-align: center;
     width: 30%;
   }
 
-  #length-plan {
-    text-align: center;
-  }
+  div {
+    display: flex;
+    justify-content: flex-end;
 
-  #price-title {
-    text-align: center;
-  }
-
-  #price-plan {
-    text-align: center;
-  }
-
-  div a {
-    color: #4d85ee;
-  }
-  & a + a {
-    margin-left: 23px;
-    color: #de3b3b;
+    a {
+      color: #4d85ee;
+    }
+    button {
+      border: 0;
+      background: none;
+      margin-left: 23px;
+      font-size: 16px;
+      color: #de3b3b;
+    }
   }
 `;

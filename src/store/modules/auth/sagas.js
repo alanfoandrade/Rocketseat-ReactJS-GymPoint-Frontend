@@ -16,19 +16,13 @@ export function* signIn({ payload }) {
 
     const { token, user } = response.data;
 
-    if (user.auth_level !== 0 && user.auth_level !== 1) {
-      toast.error('Não é funcionário');
-      yield put(signFailure());
-      return;
-    }
-
     api.defaults.headers.Authorization = `Bearer ${token}`;
 
     yield put(signInSuccess(token, user));
 
     history.push('/dashboard/aluno');
   } catch (err) {
-    toast.error('Falha na autenticação, verifique seus dados');
+    toast.error(err.response.data.error);
     yield put(signFailure());
   }
 }
@@ -38,9 +32,7 @@ export function setToken({ payload }) {
 
   const { token } = payload.auth;
 
-  if (token) {
-    api.defaults.headers.Authorization = `Bearer ${token}`;
-  }
+  if (token) api.defaults.headers.Authorization = `Bearer ${token}`;
 }
 
 export function signOut() {

@@ -2,11 +2,7 @@ import { takeLatest, call, put, all } from 'redux-saga/effects';
 
 import { toast } from 'react-toastify';
 
-import {
-  createStudentFailure,
-  loadStudentSuccess,
-  loadStudentFailure,
-} from './actions';
+import { loadStudentSuccess, deleteStudentSuccess } from './actions';
 import history from '../../../services/history';
 
 import api from '../../../services/api';
@@ -24,11 +20,8 @@ export function* createStudent({ payload }) {
     });
 
     history.push('/dashboard/aluno');
-
-    yield put(createStudentFailure());
-  } catch (error) {
-    toast.error('Falha no cadastro, verifique os dados');
-    yield put(createStudentFailure());
+  } catch (err) {
+    toast.error(err.response.data.error);
   }
 }
 
@@ -38,16 +31,49 @@ export function* loadStudent() {
 
     if (data) {
       yield put(loadStudentSuccess(data));
-    } else {
-      yield put(loadStudentFailure());
+    } else toast.error('Falha ao buscar alunos');
+  } catch (err) {
+    toast.error(err.response.data.error);
+  }
+}
+
+export function* updateStudent({ payload }) {
+  try {
+    const { id, name, email, age, weight, height } = payload;
+    const response = yield call(api.put, `students/${id}`, {
+      name,
+      email,
+      age,
+      weight,
+      height,
+    });
+
+    if (response) {
+      toast.success('Aluno atualizado com sucesso');
+      history.push('/dashboard/aluno');
     }
-  } catch (error) {
-    toast.error('Falha ao buscar alunos, atualize a página');
-    yield put(loadStudentFailure());
+  } catch (err) {
+    toast.error(err.response.data.error);
+  }
+}
+
+export function* deleteStudent({ payload }) {
+  try {
+    const { id } = payload;
+    const response = yield call(api.delete, `students/${id}`);
+
+    if (response) {
+      toast.success(response.data.message);
+      yield put(deleteStudentSuccess(id));
+    } else toast.error('Falha ao excluir aluno');
+  } catch (err) {
+    toast.error(err.response.data.error);
   }
 }
 
 export default all([
   takeLatest('@student/CREATE_REQUEST', createStudent),
   takeLatest('@student/LOAD_REQUEST', loadStudent),
+  takeLatest('@student/UPDATE_REQUEST', updateStudent),
+  takeLatest('@student/DELETE_REQUEST', deleteStudent),
 ]);

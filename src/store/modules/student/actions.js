@@ -5,12 +5,6 @@ export function createStudentRequest(name, email, age, weight, height) {
   };
 }
 
-export function createStudentFailure() {
-  return {
-    type: '@student/CREATE_FAILURE',
-  };
-}
-
 export function loadStudentRequest() {
   return {
     type: '@student/LOAD_REQUEST',
@@ -24,8 +18,23 @@ export function loadStudentSuccess(students) {
   };
 }
 
-export function loadStudentFailure() {
+export function updateStudentRequest(id, name, email, age, weight, height) {
   return {
-    type: '@student/LOAD_FAILURE',
+    type: '@student/UPDATE_REQUEST',
+    payload: { id, name, email, age, weight, height },
+  };
+}
+
+export function deleteStudentRequest(id) {
+  return {
+    type: '@student/DELETE_REQUEST',
+    payload: { id },
+  };
+}
+
+export function deleteStudentSuccess(id) {
+  return {
+    type: '@student/DELETE_SUCCESS',
+    payload: { id },
   };
 }

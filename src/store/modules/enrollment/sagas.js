@@ -1,11 +1,7 @@
 import { takeLatest, call, put, all } from 'redux-saga/effects';
 
 import { toast } from 'react-toastify';
-import {
-  createEnrollmentFailure,
-  loadEnrollmentSuccess,
-  loadEnrollmentFailure,
-} from './actions';
+import { loadEnrollmentSuccess, deleteEnrollmentSuccess } from './actions';
 
 import history from '../../../services/history';
 
@@ -22,10 +18,8 @@ export function* createEnrollment({ payload }) {
     });
 
     history.push('/dashboard/matricula');
-
-    yield put(createEnrollmentFailure());
-  } catch (error) {
-    toast.error('Falha no cadastro de matrícula, verifique os dados');
+  } catch (err) {
+    toast.error(err.response.data.error);
   }
 }
 
@@ -35,16 +29,28 @@ export function* loadEnrollment() {
 
     if (data) {
       yield put(loadEnrollmentSuccess(data));
-    } else {
-      yield put(loadEnrollmentFailure());
-    }
-  } catch (error) {
-    toast.error('Falha ao buscar matrículas, atualize a página');
-    yield put(loadEnrollmentFailure());
+    } else toast.error('Falha ao buscar matrículas, atualize a página');
+  } catch (err) {
+    toast.error(err.response.data.error);
+  }
+}
+
+export function* deleteEnrollment({ payload }) {
+  try {
+    const { id } = payload;
+    const response = yield call(api.delete, `enrollments/${id}`);
+
+    if (response) {
+      toast.success(response.data.message);
+      yield put(deleteEnrollmentSuccess(id));
+    } else toast.error('Falha ao excluir matrícula');
+  } catch (err) {
+    toast.error(err.response.data.error);
   }
 }
 
 export default all([
   takeLatest('@enrollment/CREATE_REQUEST', createEnrollment),
   takeLatest('@enrollment/LOAD_REQUEST', loadEnrollment),
+  takeLatest('@enrollment/DELETE_REQUEST', deleteEnrollment),
 ]);

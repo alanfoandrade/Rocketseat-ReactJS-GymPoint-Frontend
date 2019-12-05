@@ -9,13 +9,14 @@ import { Content, HelpOrderTable } from './styles';
 
 export default function HelpOrder() {
   const dispatch = useDispatch();
-  const { helporders } = useSelector(state => state.helporder);
 
   useEffect(() => {
     dispatch(loadHelpOrderRequest());
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const { helporders } = useSelector(state => state.helporder);
 
   return (
     <DefaultLayout screenTitle="Pedidos de auxílio" navSession="ajuda">
@@ -28,17 +29,16 @@ export default function HelpOrder() {
             </tr>
           </thead>
           <tbody>
-            {helporders &&
-              helporders.map(helporder => (
-                <tr>
-                  <td>{helporder.student.name}</td>
-                  <td>
-                    <div>
-                      <Link to="ajuda/responder">responder</Link>
-                    </div>
-                  </td>
-                </tr>
-              ))}
+            {helporders.map(helporder => (
+              <tr>
+                <td>{helporder.student.name}</td>
+                <td>
+                  <div>
+                    <Link to="ajuda/responder">responder</Link>
+                  </div>
+                </td>
+              </tr>
+            ))}
           </tbody>
         </HelpOrderTable>
       </Content>

@@ -5,12 +5,6 @@ export function createEnrollmentRequest(student_id, plan_id, start_date) {
   };
 }
 
-export function createEnrollmentFailure() {
-  return {
-    type: '@enrollment/CREATE_FAILURE',
-  };
-}
-
 export function loadEnrollmentRequest() {
   return {
     type: '@enrollment/LOAD_REQUEST',
@@ -24,8 +18,16 @@ export function loadEnrollmentSuccess(enrollments) {
   };
 }
 
-export function loadEnrollmentFailure() {
+export function deleteEnrollmentRequest(id) {
   return {
-    type: '@enrollment/LOAD_FAILURE',
+    type: '@enrollment/DELETE_REQUEST',
+    payload: { id },
+  };
+}
+
+export function deleteEnrollmentSuccess(id) {
+  return {
+    type: '@enrollment/DELETE_SUCCESS',
+    payload: { id },
   };
 }

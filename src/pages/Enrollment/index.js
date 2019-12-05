@@ -5,7 +5,10 @@ import { Link } from 'react-router-dom';
 import { format, parseISO } from 'date-fns';
 import pt from 'date-fns/locale/pt';
 import { MdCheckCircle } from 'react-icons/md';
-import { loadEnrollmentRequest } from '../../store/modules/enrollment/actions';
+import {
+  loadEnrollmentRequest,
+  deleteEnrollmentRequest,
+} from '../../store/modules/enrollment/actions';
 
 import DefaultLayout from '../_layouts/default';
 import { Content, EnrollmentTable } from './styles';
@@ -13,29 +16,32 @@ import { Content, EnrollmentTable } from './styles';
 export default function Enrollment() {
   const dispatch = useDispatch();
 
-  const enrolls = useSelector(
-    state =>
-      state.enrollment.enrollments &&
-      state.enrollment.enrollments.map(enroll => ({
-        ...enroll,
-        formattedStart: format(
-          parseISO(enroll.start_date),
-          "dd 'de' MMMM 'de' yyyy",
-          { locale: pt }
-        ),
-        formattedEnd: format(
-          parseISO(enroll.end_date),
-          "dd 'de' MMMM 'de' yyyy",
-          { locale: pt }
-        ),
-      }))
-  );
-
   useEffect(() => {
     dispatch(loadEnrollmentRequest());
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const enrolls = useSelector(state =>
+    state.enrollment.enrollments.map(enroll => ({
+      ...enroll,
+      name: enroll.student.name,
+      formattedStart: format(
+        parseISO(enroll.start_date),
+        "dd 'de' MMMM 'de' yyyy",
+        { locale: pt }
+      ),
+      formattedEnd: format(
+        parseISO(enroll.end_date),
+        "dd 'de' MMMM 'de' yyyy",
+        { locale: pt }
+      ),
+    }))
+  );
+
+  function handleDelete(id) {
+    dispatch(deleteEnrollmentRequest(id));
+  }
 
   return (
     <DefaultLayout
@@ -58,27 +64,31 @@ export default function Enrollment() {
             </tr>
           </thead>
           <tbody>
-            {enrolls &&
-              enrolls.map(enrollment => (
-                <tr>
-                  <td id="name-student">{enrollment.student.name}</td>
-                  <td>{enrollment.plan.title}</td>
-                  <td>{enrollment.formattedStart}</td>
-                  <td>{enrollment.formattedEnd}</td>
-                  <td>
-                    <MdCheckCircle
-                      color={enrollment.active ? '#42cb59' : '#ddd'}
-                      size={20}
-                    />
-                  </td>
-                  <td>
-                    <div>
-                      <Link to="matricula/editar">editar</Link>
-                      <Link to="/">apagar</Link>
-                    </div>
-                  </td>
-                </tr>
-              ))}
+            {enrolls.map(enrollment => (
+              <tr>
+                <td id="name-student">{enrollment.name}</td>
+                <td>{enrollment.plan.title}</td>
+                <td>{enrollment.formattedStart}</td>
+                <td>{enrollment.formattedEnd}</td>
+                <td>
+                  <MdCheckCircle
+                    color={enrollment.active ? '#42cb59' : '#ddd'}
+                    size={20}
+                  />
+                </td>
+                <td>
+                  <div>
+                    <Link to="matricula/editar">editar</Link>
+                    <button
+                      type="button"
+                      onClick={() => handleDelete(enrollment.id)}
+                    >
+                      apagar
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            ))}
           </tbody>
         </EnrollmentTable>
       </Content>

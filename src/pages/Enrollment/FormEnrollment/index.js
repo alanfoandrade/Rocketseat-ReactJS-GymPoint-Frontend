@@ -25,7 +25,7 @@ import { Content, InputContainer } from './styles';
     .required(),
 }); */
 
-export default function HandleEnrollment(props) {
+export default function FormEnrollment(props) {
   const { match } = props;
   const path = match.path.split('/')[3];
   const title =
@@ -66,7 +66,7 @@ export default function HandleEnrollment(props) {
   );
 }
 
-HandleEnrollment.propTypes = {
+FormEnrollment.propTypes = {
   match: PropTypes.shape({
     path: PropTypes.string,
   }).isRequired,

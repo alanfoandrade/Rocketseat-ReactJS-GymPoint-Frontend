@@ -1,7 +1,7 @@
 import { takeLatest, call, put, all } from 'redux-saga/effects';
 
 import { toast } from 'react-toastify';
-import { createPlanFailure, loadPlanSuccess, loadPlanFailure } from './actions';
+import { loadPlanSuccess, deletePlanSuccess } from './actions';
 
 import history from '../../../services/history';
 
@@ -11,20 +11,17 @@ export function* createPlan({ payload }) {
   try {
     const { title, length, price } = payload;
 
-    console.tron.log(payload);
-
-    yield call(api.post, 'plans', {
+    const response = yield call(api.post, 'plans', {
       title,
       length,
       price,
     });
 
-    history.push('/dashboard/plano');
-
-    yield put(createPlanFailure());
-  } catch (error) {
-    toast.error('Falha na criação de plano, verifique os dados');
-    yield put(createPlanFailure());
+    if (response) {
+      history.push('/dashboard/plano');
+    } else toast.error('Falha ao cadastrar plano');
+  } catch (err) {
+    toast.error(err.response.data.error);
   }
 }
 
@@ -34,16 +31,47 @@ export function* loadPlan() {
 
     if (data) {
       yield put(loadPlanSuccess(data));
-    } else {
-      yield put(loadPlanFailure());
+    } else toast.error('Falha ao buscar planos');
+  } catch (err) {
+    toast.error(err.response.data.error);
+  }
+}
+
+export function* updatePlan({ payload }) {
+  try {
+    const { id, title, length, price } = payload;
+    const response = yield call(api.put, `plans/${id}`, {
+      title,
+      length,
+      price,
+    });
+
+    if (response) {
+      toast.success('Plano atualizado com sucesso');
+      history.push('/dashboard/plano');
     }
-  } catch (error) {
-    toast.error('Falha ao buscar planos, atualize a página');
-    yield put(loadPlanFailure());
+  } catch (err) {
+    toast.error(err.response.data.error);
+  }
+}
+
+export function* deletePlan({ payload }) {
+  try {
+    const { id } = payload;
+    const response = yield call(api.delete, `plans/${id}`);
+
+    if (response) {
+      toast.success(response.data.message);
+      yield put(deletePlanSuccess(id));
+    } else toast.error('Falha ao excluir aluno');
+  } catch (err) {
+    toast.error(err.response.data.error);
   }
 }
 
 export default all([
   takeLatest('@plan/CREATE_REQUEST', createPlan),
   takeLatest('@plan/LOAD_REQUEST', loadPlan),
+  takeLatest('@plan/UPDATE_REQUEST', updatePlan),
+  takeLatest('@plan/DELETE_REQUEST', deletePlan),
 ]);

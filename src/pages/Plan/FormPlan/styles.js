@@ -1,5 +1,7 @@
 import styled from 'styled-components';
 
+import colors from '../../../styles/colors';
+
 export const Content = styled.div`
   h2 {
     font-size: 14px;
@@ -12,7 +14,7 @@ export const Content = styled.div`
     font-size: 16px;
     line-height: 1.25;
     padding: 0 15px;
-    margin: 8px 0 20px;
+    margin-top: 8px;
 
     &::placeholder {
       color: #999999;
@@ -22,11 +24,19 @@ export const Content = styled.div`
   div:last-child input {
     margin-bottom: 0;
   }
+
+  form span {
+    color: ${colors.watermelon};
+    align-self: flex-start;
+    font-weight: bold;
+    opacity: 0.9;
+  }
 `;
 
 export const InputContainer = styled.div`
   display: flex;
   justify-content: space-between;
+  margin-top: 20px;
 
   label {
     color: #444;

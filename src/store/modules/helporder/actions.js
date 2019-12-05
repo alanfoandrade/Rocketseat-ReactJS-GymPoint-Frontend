@@ -10,9 +10,3 @@ export function loadHelpOrderSuccess(helporders) {
     payload: { helporders },
   };
 }
-
-export function loadHelpOrderFailure() {
-  return {
-    type: '@helporder/LOAD_FAILURE',
-  };
-}

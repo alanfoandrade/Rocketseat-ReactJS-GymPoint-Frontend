@@ -5,12 +5,6 @@ export function createPlanRequest(title, length, price) {
   };
 }
 
-export function createPlanFailure() {
-  return {
-    type: '@plan/CREATE_FAILURE',
-  };
-}
-
 export function loadPlanRequest() {
   return {
     type: '@plan/LOAD_REQUEST',
@@ -24,8 +18,23 @@ export function loadPlanSuccess(plans) {
   };
 }
 
-export function loadPlanFailure() {
+export function updatePlanRequest(id, title, length, price) {
   return {
-    type: '@plan/LOAD_FAILURE',
+    type: '@plan/UPDATE_REQUEST',
+    payload: { id, title, length, price },
+  };
+}
+
+export function deletePlanRequest(id) {
+  return {
+    type: '@plan/DELETE_REQUEST',
+    payload: { id },
+  };
+}
+
+export function deletePlanSuccess(id) {
+  return {
+    type: '@plan/DELETE_SUCCESS',
+    payload: { id },
   };
 }

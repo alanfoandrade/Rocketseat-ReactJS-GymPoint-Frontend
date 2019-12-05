@@ -32,7 +32,7 @@ export default function DefaultLayout(props) {
             navSession={navSession}
             screenTitle={screenTitle}
           />
-          <Container>{children}</Container>
+          <Container largeList={largeList}>{children}</Container>
         </Content>
       </Wrapper>
     </>

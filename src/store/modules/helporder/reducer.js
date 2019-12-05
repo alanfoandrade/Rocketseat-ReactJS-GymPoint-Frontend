@@ -1,7 +1,7 @@
 import produce from 'immer';
 
 const INITIAL_STATE = {
-  helporders: null,
+  helporders: [],
 };
 
 export default function plan(state = INITIAL_STATE, action) {
