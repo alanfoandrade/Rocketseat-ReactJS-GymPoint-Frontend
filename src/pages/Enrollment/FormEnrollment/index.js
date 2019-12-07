@@ -1,24 +1,25 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import { parseISO } from 'date-fns';
+
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
-import { Form, Input, Select, Scope } from '@rocketseat/unform';
+import Select from 'react-select';
 import ReactDatePicker from 'react-datepicker';
+import { Form, Input } from '@rocketseat/unform';
+import { parseISO } from 'date-fns';
 import pt from 'date-fns/locale/pt';
-// import Select from 'react-select';
+
 // import * as Yup from 'yup';
 
 import {
   createEnrollmentRequest,
   updateEnrollmentRequest,
-  loadEnrollmentRequest,
 } from '../../../store/modules/enrollment/actions';
 import { loadPlanRequest } from '../../../store/modules/plan/actions';
 import { loadStudentRequest } from '../../../store/modules/student/actions';
 
 import DefaultLayout from '../../_layouts/default';
-import { Content, InputContainer } from './styles';
+import { Content, InputContainer, selectStyle } from './styles';
 
 /* const schema = Yup.object().shape({
   name: Yup.string().required('Nome é requerido'),
@@ -37,7 +38,6 @@ export default function FormEnrollment({ match }) {
   useEffect(() => {
     dispatch(loadStudentRequest());
     dispatch(loadPlanRequest());
-    dispatch(loadEnrollmentRequest());
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -48,24 +48,47 @@ export default function FormEnrollment({ match }) {
       title: student.name,
     }))
   );
+
   const { plans } = useSelector(s => s.plan);
 
   const { enrollUpdating } = useSelector(state => state.enrollment);
 
-  const [startDate, setStartDate] = useState(
+  const [handleStudent, setHandleStudent] = useState(
+    enrollUpdating.student || {}
+  );
+
+  console.tron.log(handleStudent);
+
+  const [handlePlan, setHandlePlan] = useState(enrollUpdating.plan || {});
+
+  const [handleDate, sethandleDate] = useState(
     enrollUpdating.start_date ? parseISO(enrollUpdating.start_date) : new Date()
   );
 
-  function handleSubmit({ student, plan }) {
+  function handleStudentChange(student) {
+    setHandleStudent(student);
+  }
+
+  function handlePlanChange(plan) {
+    setHandlePlan(plan);
+  }
+
+  function handleDateChange(date) {
+    sethandleDate(date);
+  }
+
+  function handleSubmit() {
     if (url === 'cadastrar') {
-      dispatch(createEnrollmentRequest(student.id, plan.id, startDate));
+      dispatch(
+        createEnrollmentRequest(handleStudent.id, handlePlan.id, handleDate)
+      );
     } else {
       dispatch(
         updateEnrollmentRequest(
           enrollUpdating.id,
-          student.id,
-          plan.id,
-          startDate
+          handleStudent.id,
+          handlePlan.id,
+          handleDate
         )
       );
     }
@@ -75,36 +98,48 @@ export default function FormEnrollment({ match }) {
     <DefaultLayout screenTitle={screenTitle} btnBack btnSave>
       <Content>
         <Form initialData={enrollUpdating} id="handler" onSubmit={handleSubmit}>
-          <Scope path="student">
+          <label>
+            ALUNO
+            <Select
+              id="student_select"
+              name="id"
+              options={students}
+              getOptionLabel={option => option.title}
+              getOptionValue={option => option.id}
+              styles={selectStyle}
+              placeholder="Selecione o aluno"
+              onChange={option => handleStudentChange(option)}
+              defaultValue={{
+                id: handleStudent.id,
+                title: handleStudent.name,
+              }}
+            />
+          </label>
+          <InputContainer>
             <label>
-              ALUNO
+              PLANO
               <Select
-                id="student_select"
+                id="plan_select"
                 name="id"
-                options={students}
-                placeholder="Selecione o aluno"
+                options={plans}
+                getOptionLabel={option => option.title}
+                getOptionValue={option => option.id}
+                styles={selectStyle}
+                placeholder="Selecione o plano"
+                onChange={option => handlePlanChange(option)}
+                defaultValue={{
+                  id: handlePlan.id,
+                  title: handlePlan.title,
+                }}
               />
             </label>
-          </Scope>
-          <InputContainer>
-            <Scope path="plan">
-              <label>
-                PLANO
-                <Select
-                  id="plan_select"
-                  name="id"
-                  options={plans}
-                  placeholder="Selecione o plano"
-                />
-              </label>
-            </Scope>
             <label>
               DATA DE INÍCIO
               <ReactDatePicker
                 dateFormat="dd 'de' MMMM 'de' yyyy"
-                selected={startDate}
+                selected={handleDate}
                 locale={pt}
-                onChange={date => setStartDate(date)}
+                onChange={date => handleDateChange(date)}
               />
             </label>
             <label>

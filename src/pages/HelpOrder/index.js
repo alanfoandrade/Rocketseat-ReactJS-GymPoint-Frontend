@@ -50,7 +50,7 @@ export default function HelpOrder() {
         </thead>
         <tbody>
           {helporders.map(helporder => (
-            <tr>
+            <tr key={helporder.id}>
               <td>{helporder.student.name}</td>
               <td>
                 <div>

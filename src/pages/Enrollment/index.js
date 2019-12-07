@@ -70,7 +70,7 @@ export default function Enrollment() {
           </thead>
           <tbody>
             {enrolls.map(enrollment => (
-              <tr>
+              <tr key={enrollment.id}>
                 <td id="name-student">{enrollment.student.name}</td>
                 <td>{enrollment.plan.title}</td>
                 <td>{enrollment.formattedStart}</td>

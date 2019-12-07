@@ -50,7 +50,7 @@ export default function Plan() {
           </thead>
           <tbody>
             {plans.map(plan => (
-              <tr>
+              <tr key={plan.id}>
                 <td id="plan-name">{plan.title}</td>
                 <td>{plan.length}</td>
                 <td>{plan.price}</td>

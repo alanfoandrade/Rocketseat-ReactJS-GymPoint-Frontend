@@ -12,18 +12,22 @@ export default function enrollment(state = INITIAL_STATE, action) {
         draft.enrollments.push(action.payload.enrollment);
         break;
       }
+
       case '@enrollment/LOAD_SUCCESS': {
         draft.enrollments = action.payload.enrollments;
         break;
       }
+
       case '@enrollment/SET_UPDATING': {
         draft.enrollUpdating = action.payload.enrollUpdating;
         break;
       }
-      case '@plan/RESET_UPDATING': {
+
+      case '@enrollment/RESET_UPDATING': {
         draft.enrollUpdating = {};
         break;
       }
+
       case '@enrollment/UPDATE_SUCCESS': {
         const enrollmentIndex = draft.enrollments.findIndex(
           enroll => enroll.id === action.payload.enrollment.id
@@ -36,6 +40,7 @@ export default function enrollment(state = INITIAL_STATE, action) {
         draft.enrollUpdating = {};
         break;
       }
+
       case '@enrollment/DELETE_SUCCESS': {
         const enrollmentIndex = draft.enrollments.findIndex(
           enroll => enroll.id === action.payload.id

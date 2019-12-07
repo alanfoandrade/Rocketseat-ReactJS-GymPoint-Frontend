@@ -51,7 +51,7 @@ export default function Student() {
           </thead>
           <tbody>
             {students.map(student => (
-              <tr>
+              <tr key={student.id}>
                 <td>{student.name}</td>
                 <td>{student.email}</td>
                 <td id="age-student">{student.age}</td>
