@@ -1,10 +1,10 @@
 /* eslint-disable jsx-a11y/control-has-associated-label */
-
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { Link } from 'react-router-dom';
+import history from '../../services/history';
 import {
   loadPlanRequest,
+  setPlanUpdating,
   deletePlanRequest,
 } from '../../store/modules/plan/actions';
 
@@ -21,6 +21,11 @@ export default function Plan() {
   }, []);
 
   const { plans } = useSelector(state => state.plan);
+
+  function handleUpdate(plan) {
+    dispatch(setPlanUpdating(plan));
+    history.push('/dashboard/plano/editar');
+  }
 
   function handleDelete(id) {
     dispatch(deletePlanRequest(id));
@@ -51,17 +56,9 @@ export default function Plan() {
                 <td>{plan.price}</td>
                 <td>
                   <div>
-                    <Link
-                      id="edit"
-                      to={{
-                        pathname: 'plano/editar',
-                        state: {
-                          plan,
-                        },
-                      }}
-                    >
+                    <button type="button" onClick={() => handleUpdate(plan)}>
                       editar
-                    </Link>
+                    </button>
                     <button type="button" onClick={() => handleDelete(plan.id)}>
                       apagar
                     </button>

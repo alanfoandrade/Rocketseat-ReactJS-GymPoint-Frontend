@@ -1,17 +1,21 @@
 import { takeLatest, call, put, all } from 'redux-saga/effects';
-
 import { toast } from 'react-toastify';
 
-import { loadStudentSuccess, deleteStudentSuccess } from './actions';
+import api from '../../../services/api';
 import history from '../../../services/history';
 
-import api from '../../../services/api';
+import {
+  createStudentSuccess,
+  loadStudentSuccess,
+  updateStudentSuccess,
+  deleteStudentSuccess,
+} from './actions';
 
 export function* createStudent({ payload }) {
   try {
     const { name, email, age, weight, height } = payload;
 
-    yield call(api.post, 'students', {
+    const response = yield call(api.post, 'students', {
       name,
       email,
       age,
@@ -19,7 +23,11 @@ export function* createStudent({ payload }) {
       height,
     });
 
-    history.push('/dashboard/aluno');
+    if (response) {
+      yield put(createStudentSuccess(response.data));
+
+      history.push('/dashboard/aluno');
+    }
   } catch (err) {
     toast.error(err.response.data.error);
   }
@@ -40,6 +48,7 @@ export function* loadStudent() {
 export function* updateStudent({ payload }) {
   try {
     const { id, name, email, age, weight, height } = payload;
+
     const response = yield call(api.put, `students/${id}`, {
       name,
       email,
@@ -50,6 +59,8 @@ export function* updateStudent({ payload }) {
 
     if (response) {
       toast.success('Aluno atualizado com sucesso');
+      yield put(updateStudentSuccess(response.data));
+
       history.push('/dashboard/aluno');
     }
   } catch (err) {
@@ -60,6 +71,7 @@ export function* updateStudent({ payload }) {
 export function* deleteStudent({ payload }) {
   try {
     const { id } = payload;
+
     const response = yield call(api.delete, `students/${id}`);
 
     if (response) {

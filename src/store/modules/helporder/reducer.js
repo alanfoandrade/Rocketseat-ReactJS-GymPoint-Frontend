@@ -11,6 +11,17 @@ export default function plan(state = INITIAL_STATE, action) {
         draft.helporders = action.payload.helporders;
         break;
       }
+      case '@helporder/UPDATE_SUCCESS': {
+        const helporderIndex = draft.helporders.findIndex(
+          s => s.id === action.payload.id
+        );
+
+        draft.helpAnswering = {};
+        if (helporderIndex >= 0) {
+          draft.helporders.splice(helporderIndex, 1);
+        }
+        break;
+      }
       default:
     }
   });

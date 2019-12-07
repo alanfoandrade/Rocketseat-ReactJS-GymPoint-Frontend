@@ -10,3 +10,17 @@ export function loadHelpOrderSuccess(helporders) {
     payload: { helporders },
   };
 }
+
+export function updateHelpOrderRequest(id, answer) {
+  return {
+    type: '@helporder/UPDATE_REQUEST',
+    payload: { id, answer },
+  };
+}
+
+export function updateHelpOrderSucces(id) {
+  return {
+    type: '@helporder/UPDATE_SUCCESS',
+    payload: { id },
+  };
+}

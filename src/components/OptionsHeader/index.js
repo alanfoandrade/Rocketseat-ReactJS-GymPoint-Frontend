@@ -1,7 +1,12 @@
 import React from 'react';
+import { useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Input } from '@rocketseat/unform';
 import { MdAdd, MdKeyboardArrowLeft, MdCheck, MdSearch } from 'react-icons/md';
+
+import { resetPlanUpdating } from '../../store/modules/plan/actions';
+import { resetStudentUpdating } from '../../store/modules/student/actions';
+import { resetEnrollmentUpdating } from '../../store/modules/enrollment/actions';
 import history from '../../services/history';
 import {
   Container,
@@ -23,13 +28,27 @@ export default function OptionsHeader(props) {
     largeList,
   } = props;
 
+  const dispatch = useDispatch();
+
+  function handlegoBack() {
+    history.goBack();
+  }
+
+  function handleAdd() {
+    dispatch(resetPlanUpdating());
+    dispatch(resetStudentUpdating());
+    dispatch(resetEnrollmentUpdating());
+
+    history.push(`/dashboard/${navSession}/cadastrar`);
+  }
+
   return (
     <Container largeList={largeList}>
       <Content>
         <h1>{screenTitle}</h1>
 
         <aside>
-          <BackButton visible={btnBack} onClick={() => history.goBack()}>
+          <BackButton visible={btnBack} onClick={handlegoBack}>
             <MdKeyboardArrowLeft color="#fff" size={27} /> VOLTAR
           </BackButton>
 
@@ -37,10 +56,7 @@ export default function OptionsHeader(props) {
             <MdCheck color="#fff" size={22} /> SALVAR
           </SaveButton>
 
-          <AddButton
-            visible={btnAdd}
-            onClick={() => history.push(`/dashboard/${navSession}/cadastrar`)}
-          >
+          <AddButton visible={btnAdd} onClick={handleAdd}>
             <MdAdd color="#fff" size={22} /> CADASTRAR
           </AddButton>
 

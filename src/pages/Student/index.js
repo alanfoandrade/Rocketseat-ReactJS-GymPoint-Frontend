@@ -1,10 +1,10 @@
 /* eslint-disable jsx-a11y/control-has-associated-label */
-
 import React, { useEffect } from 'react';
-import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
+import history from '../../services/history';
 import {
   loadStudentRequest,
+  setStudentUpdating,
   deleteStudentRequest,
 } from '../../store/modules/student/actions';
 
@@ -21,6 +21,11 @@ export default function Student() {
   }, []);
 
   const { students } = useSelector(state => state.student);
+
+  function handleUpdate(student) {
+    dispatch(setStudentUpdating(student));
+    history.push('/dashboard/aluno/editar');
+  }
 
   function handleDelete(id) {
     dispatch(deleteStudentRequest(id));
@@ -52,17 +57,9 @@ export default function Student() {
                 <td id="age-student">{student.age}</td>
                 <td>
                   <div>
-                    <Link
-                      id="edit"
-                      to={{
-                        pathname: 'aluno/editar',
-                        state: {
-                          student,
-                        },
-                      }}
-                    >
+                    <button type="button" onClick={() => handleUpdate(student)}>
                       editar
-                    </Link>
+                    </button>
                     <button
                       type="button"
                       onClick={() => handleDelete(student.id)}

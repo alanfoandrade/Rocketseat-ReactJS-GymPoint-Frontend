@@ -49,10 +49,13 @@ export const StudentTable = styled.table`
     display: flex;
     justify-content: flex-end;
 
-    a {
+    button {
+      border: 0;
+      background: none;
+      font-size: 16px;
       color: #4d85ee;
     }
-    button {
+    & button + button {
       border: 0;
       background: none;
       margin-left: 23px;

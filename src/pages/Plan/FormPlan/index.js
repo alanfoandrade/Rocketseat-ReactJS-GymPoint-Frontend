@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import React, { useState, useMemo } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Form, Input } from '@rocketseat/unform';
 import * as Yup from 'yup';
@@ -26,24 +26,18 @@ const schema = Yup.object().shape({
     .required(),
 });
 
-export default function FormPlan({ match, location }) {
+export default function FormPlan({ match }) {
   const { path } = match;
   const url = path.split('/')[3];
   const screenTitle =
     url === 'cadastrar' ? 'Cadastro de Plano' : 'Edição de Plano';
 
-  const [PlanLength, setLength] = useState(
-    location.state ? location.state.plan.length : 0
-  );
-  const [PlanPrice, setPrice] = useState(
-    location.state ? location.state.plan.price : 0
-  );
-  const [PlanTitle, setTitle] = useState(
-    location.state ? location.state.plan.title : ''
-  );
-  const [PlanId] = useState(location.state ? location.state.plan.id : null);
-
   const dispatch = useDispatch();
+
+  const { planUpdating } = useSelector(state => state.plan);
+
+  const [PlanLength, setLength] = useState(planUpdating.length || 0);
+  const [PlanPrice, setPrice] = useState(planUpdating.price || 0);
 
   const total = useMemo(() => formatPriceBrl(PlanPrice * PlanLength), [
     PlanPrice,
@@ -51,22 +45,22 @@ export default function FormPlan({ match, location }) {
   ]);
 
   function handleSubmit({ title, length, price }) {
-    if (!PlanId) dispatch(createPlanRequest(title, length, price));
-    dispatch(updatePlanRequest(PlanId, title, length, price));
+    if (url === 'cadastrar') {
+      dispatch(createPlanRequest(title, length, price));
+    } else dispatch(updatePlanRequest(planUpdating.id, title, length, price));
   }
 
   return (
     <DefaultLayout screenTitle={screenTitle} btnBack btnSave>
       <Content>
-        <Form schema={schema} id="handler" onSubmit={handleSubmit}>
+        <Form
+          initialData={planUpdating}
+          schema={schema}
+          id="handler"
+          onSubmit={handleSubmit}
+        >
           <h2>TÍTULO DO PLANO</h2>
-          <Input
-            id="title"
-            name="title"
-            value={PlanTitle}
-            onChange={e => setTitle(e.target.value)}
-            placeholder="Título do plano"
-          />
+          <Input id="title" name="title" placeholder="Título do plano" />
           <InputContainer>
             <label>
               DURAÇÃO (em meses)
@@ -74,9 +68,8 @@ export default function FormPlan({ match, location }) {
                 type="number"
                 id="length"
                 name="length"
-                value={PlanLength}
-                onChange={e => setLength(e.target.value)}
                 placeholder="Duração (em meses)"
+                onChange={e => setLength(e.target.value)}
               />
             </label>
             <label>
@@ -85,9 +78,8 @@ export default function FormPlan({ match, location }) {
                 type="number"
                 id="price"
                 name="price"
-                value={PlanPrice}
-                onChange={e => setPrice(e.target.value)}
                 placeholder="Preço mensal"
+                onChange={e => setPrice(e.target.value)}
               />
             </label>
             <label>
@@ -95,8 +87,8 @@ export default function FormPlan({ match, location }) {
               <Input
                 disabled
                 id="total"
-                name="total"
                 value={total}
+                name="total"
                 placeholder="Preço total"
               />
             </label>

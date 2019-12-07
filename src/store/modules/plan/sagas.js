@@ -1,11 +1,15 @@
 import { takeLatest, call, put, all } from 'redux-saga/effects';
-
 import { toast } from 'react-toastify';
-import { loadPlanSuccess, deletePlanSuccess } from './actions';
-
-import history from '../../../services/history';
 
 import api from '../../../services/api';
+import history from '../../../services/history';
+
+import {
+  createPlanSuccess,
+  loadPlanSuccess,
+  updatePlanSuccess,
+  deletePlanSuccess,
+} from './actions';
 
 export function* createPlan({ payload }) {
   try {
@@ -18,6 +22,8 @@ export function* createPlan({ payload }) {
     });
 
     if (response) {
+      yield put(createPlanSuccess(response.data));
+
       history.push('/dashboard/plano');
     } else toast.error('Falha ao cadastrar plano');
   } catch (err) {
@@ -40,6 +46,7 @@ export function* loadPlan() {
 export function* updatePlan({ payload }) {
   try {
     const { id, title, length, price } = payload;
+
     const response = yield call(api.put, `plans/${id}`, {
       title,
       length,
@@ -48,6 +55,8 @@ export function* updatePlan({ payload }) {
 
     if (response) {
       toast.success('Plano atualizado com sucesso');
+      yield put(updatePlanSuccess(response.data));
+
       history.push('/dashboard/plano');
     }
   } catch (err) {
@@ -58,6 +67,7 @@ export function* updatePlan({ payload }) {
 export function* deletePlan({ payload }) {
   try {
     const { id } = payload;
+
     const response = yield call(api.delete, `plans/${id}`);
 
     if (response) {

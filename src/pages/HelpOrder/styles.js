@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 
-export const Content = styled.div``;
+import { Modal } from '@material-ui/core';
+import colors from '../../styles/colors';
 
 export const HelpOrderTable = styled.table`
   width: 100%;
@@ -27,7 +28,72 @@ export const HelpOrderTable = styled.table`
     }
   }
 
-  div a {
+  div button {
+    font-size: 15px;
+    border: 0;
+    background: none;
     color: #4d85ee;
+  }
+`;
+
+export const AnswerModal = styled(Modal)`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  .answer-modal {
+    width: 450px;
+    background-color: #fff;
+    border-radius: 4px;
+    padding: 30px;
+    flex-direction: column;
+    display: flex;
+    justify-content: center;
+    align-items: left;
+
+    h2 {
+      font-size: 14px;
+      color: #444;
+    }
+    & p + h2 {
+      margin: 20px 0 8px;
+    }
+
+    p {
+      color: #666;
+      font-size: 16px;
+      line-height: 1.25;
+      margin-top: 8px;
+    }
+
+    #answer-form {
+      display: flex;
+      flex-direction: column;
+
+      textarea {
+        height: 150px;
+        resize: none;
+        padding: 15px;
+        border-radius: 4px;
+        border: solid 1px #ddd;
+        font-size: 16px;
+        color: #666;
+
+        &::placeholder {
+          color: #999;
+        }
+      }
+
+      button {
+        font-size: 16px;
+        font-weight: bold;
+        height: 45px;
+        margin-top: 20px;
+        border-radius: 4px;
+        border: 0;
+        color: #fff;
+        background-color: ${colors.watermelon};
+      }
+    }
   }
 `;

@@ -14,18 +14,10 @@ import FormEnrollment from '../pages/Enrollment/FormEnrollment';
 import ListEnrollment from '../pages/Enrollment';
 
 import ListHelpOrder from '../pages/HelpOrder';
-import FormAnswer from '../pages/HelpOrder/FormAnswer';
 
 export default function Routes() {
   return (
     <Switch>
-      <Route
-        path="/dashboard/ajuda/responder"
-        exact
-        component={FormAnswer}
-        isPrivate
-      />
-
       <Route
         path="/dashboard/ajuda"
         exact
