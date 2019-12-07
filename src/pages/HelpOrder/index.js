@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/label-has-associated-control */
 /* eslint-disable jsx-a11y/control-has-associated-label */
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -73,10 +74,10 @@ export default function HelpOrder() {
             onClose={() => handleModal(HelpAnswer)}
           >
             <div className="answer-modal">
-              <h2>PERGUNTA DO ALUNO</h2>
+              <label>PERGUNTA DO ALUNO</label>
               <p>{HelpAnswer.question}</p>
 
-              <h2>SUA RESPOSTA</h2>
+              <label>SUA RESPOSTA</label>
               <Form schema={schema} id="answer-form" onSubmit={handleSubmit}>
                 <Input
                   multiline

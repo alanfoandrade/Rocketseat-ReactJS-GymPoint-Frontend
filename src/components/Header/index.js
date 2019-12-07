@@ -1,5 +1,6 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { confirmAlert } from 'react-confirm-alert';
 import PropTypes from 'prop-types';
 import { Container, HeaderContent, Profile, NavMenu } from './styles';
 import { signOut } from '../../store/modules/auth/actions';
@@ -17,7 +18,20 @@ export default function Header(props) {
   const profile = useSelector(state => state.provider.profile);
 
   function handleSignOut() {
-    dispatch(signOut());
+    confirmAlert({
+      title: 'Confirmação de saída',
+      message: 'Deseja realmente sair?',
+      buttons: [
+        {
+          label: 'Yes',
+          onClick: () => dispatch(signOut()),
+        },
+        {
+          label: 'No',
+          onClick: () => {},
+        },
+      ],
+    });
   }
 
   return (

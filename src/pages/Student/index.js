@@ -1,4 +1,6 @@
 /* eslint-disable jsx-a11y/control-has-associated-label */
+
+import { confirmAlert } from 'react-confirm-alert';
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import history from '../../services/history';
@@ -27,8 +29,21 @@ export default function Student() {
     history.push('/dashboard/aluno/editar');
   }
 
-  function handleDelete(id) {
-    dispatch(deleteStudentRequest(id));
+  function handleDelete({ id, name }) {
+    confirmAlert({
+      title: 'Confirmação de exclusão',
+      message: `Deseja realmente excluir o cadastro do aluno ${name}?`,
+      buttons: [
+        {
+          label: 'Yes',
+          onClick: () => dispatch(deleteStudentRequest(id)),
+        },
+        {
+          label: 'No',
+          onClick: () => {},
+        },
+      ],
+    });
   }
 
   return (
@@ -60,10 +75,7 @@ export default function Student() {
                     <button type="button" onClick={() => handleUpdate(student)}>
                       editar
                     </button>
-                    <button
-                      type="button"
-                      onClick={() => handleDelete(student.id)}
-                    >
+                    <button type="button" onClick={() => handleDelete(student)}>
                       apagar
                     </button>
                   </div>

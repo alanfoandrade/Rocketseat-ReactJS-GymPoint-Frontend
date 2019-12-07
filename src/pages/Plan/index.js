@@ -1,6 +1,7 @@
 /* eslint-disable jsx-a11y/control-has-associated-label */
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { confirmAlert } from 'react-confirm-alert';
 import history from '../../services/history';
 import {
   loadPlanRequest,
@@ -27,8 +28,21 @@ export default function Plan() {
     history.push('/dashboard/plano/editar');
   }
 
-  function handleDelete(id) {
-    dispatch(deletePlanRequest(id));
+  function handleDelete({ id, name }) {
+    confirmAlert({
+      title: 'Confirmação de exclusão',
+      message: `Deseja realmente excluir o plano ${name}?`,
+      buttons: [
+        {
+          label: 'Yes',
+          onClick: () => dispatch(deletePlanRequest(id)),
+        },
+        {
+          label: 'No',
+          onClick: () => {},
+        },
+      ],
+    });
   }
 
   return (
@@ -59,7 +73,7 @@ export default function Plan() {
                     <button type="button" onClick={() => handleUpdate(plan)}>
                       editar
                     </button>
-                    <button type="button" onClick={() => handleDelete(plan.id)}>
+                    <button type="button" onClick={() => handleDelete(plan)}>
                       apagar
                     </button>
                   </div>

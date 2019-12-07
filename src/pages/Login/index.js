@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/label-has-associated-control */
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Form, Input } from '@rocketseat/unform';
@@ -29,9 +30,9 @@ export default function Login() {
     <AuthLayout>
       <img src={logo} alt="GymPoint" />
       <Form schema={schema} onSubmit={handleSubmit}>
-        <h1>SEU E-MAIL</h1>
+        <label>SEU E-MAIL</label>
         <Input name="email" type="email" placeholder="E-mail cadastrado" />
-        <h1>SUA SENHA</h1>
+        <label>SUA SENHA</label>
         <Input name="password" type="password" placeholder="Senha secreta" />
 
         <button type="submit">

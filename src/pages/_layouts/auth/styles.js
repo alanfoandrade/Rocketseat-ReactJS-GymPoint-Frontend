@@ -34,10 +34,10 @@ export const Container = styled.div`
     flex-direction: column;
     width: 100%;
 
-    h1 {
+    label {
+      color: #444;
       font-size: 14px;
       font-weight: bold;
-      color: #444444;
       margin-top: 15px;
     }
 

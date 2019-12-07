@@ -66,9 +66,9 @@ export default function FormStudent({ match }) {
           id="handler"
           onSubmit={handleSubmit}
         >
-          <h2>NOME COMPLETO</h2>
+          <label>NOME COMPLETO</label>
           <Input id="name" name="name" placeholder="Nome completo" />
-          <h2 id="address-title">ENDEREÇO DE E-MAIL</h2>
+          <label id="address-title">ENDEREÇO DE E-MAIL</label>
           <Input
             type="email"
             id="email"

@@ -1,7 +1,7 @@
 import React, { useRef, useEffect } from 'react';
-import Select from 'react-select';
-
 import { useField } from '@rocketseat/unform';
+import Select from 'react-select';
+import PropTypes from 'prop-types';
 
 export default function ReactSelect({
   name,
@@ -64,3 +64,13 @@ export default function ReactSelect({
     </>
   );
 }
+
+ReactSelect.propTypes = {
+  options: PropTypes.shape({
+    find: PropTypes.func,
+    filter: PropTypes.func,
+  }).isRequired,
+  name: PropTypes.string.isRequired,
+  label: PropTypes.string.isRequired,
+  multiple: PropTypes.bool.isRequired,
+};

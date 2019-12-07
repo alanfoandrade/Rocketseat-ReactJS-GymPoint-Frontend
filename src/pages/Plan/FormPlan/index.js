@@ -59,7 +59,7 @@ export default function FormPlan({ match }) {
           id="handler"
           onSubmit={handleSubmit}
         >
-          <h2>TÍTULO DO PLANO</h2>
+          <label>TÍTULO DO PLANO</label>
           <Input id="title" name="title" placeholder="Título do plano" />
           <InputContainer>
             <label>

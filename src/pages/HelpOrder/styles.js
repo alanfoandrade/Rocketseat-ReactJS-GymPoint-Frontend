@@ -51,11 +51,12 @@ export const AnswerModal = styled(Modal)`
     justify-content: center;
     align-items: left;
 
-    h2 {
-      font-size: 14px;
+    label {
       color: #444;
+      font-size: 14px;
+      font-weight: bold;
     }
-    & p + h2 {
+    p + label {
       margin: 20px 0 8px;
     }
 

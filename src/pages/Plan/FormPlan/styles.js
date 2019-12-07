@@ -3,9 +3,10 @@ import styled from 'styled-components';
 import colors from '../../../styles/colors';
 
 export const Content = styled.div`
-  h2 {
-    font-size: 14px;
+  label {
     color: #444;
+    font-size: 14px;
+    font-weight: bold;
   }
 
   input {

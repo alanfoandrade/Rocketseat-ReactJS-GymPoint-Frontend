@@ -1,6 +1,7 @@
 /* eslint-disable jsx-a11y/control-has-associated-label */
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { confirmAlert } from 'react-confirm-alert';
 import { format, parseISO } from 'date-fns';
 import pt from 'date-fns/locale/pt';
 import { MdCheckCircle } from 'react-icons/md';
@@ -39,8 +40,21 @@ export default function Enrollment() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  function handleDelete(id) {
-    dispatch(deleteEnrollmentRequest(id));
+  function handleDelete({ id, student }) {
+    confirmAlert({
+      title: 'Confirmação de exclusão',
+      message: `Deseja realmente excluir a matrícula do aluno ${student.name}?`,
+      buttons: [
+        {
+          label: 'Yes',
+          onClick: () => dispatch(deleteEnrollmentRequest(id)),
+        },
+        {
+          label: 'No',
+          onClick: () => {},
+        },
+      ],
+    });
   }
 
   function handleUpdate(enrollment) {
@@ -91,7 +105,7 @@ export default function Enrollment() {
                     </button>
                     <button
                       type="button"
-                      onClick={() => handleDelete(enrollment.id)}
+                      onClick={() => handleDelete(enrollment)}
                     >
                       apagar
                     </button>

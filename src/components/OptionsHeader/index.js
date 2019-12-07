@@ -3,11 +3,11 @@ import { useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Input } from '@rocketseat/unform';
 import { MdAdd, MdKeyboardArrowLeft, MdCheck, MdSearch } from 'react-icons/md';
-
 import { resetPlanUpdating } from '../../store/modules/plan/actions';
 import { resetStudentUpdating } from '../../store/modules/student/actions';
 import { resetEnrollmentUpdating } from '../../store/modules/enrollment/actions';
 import history from '../../services/history';
+
 import {
   Container,
   Content,
