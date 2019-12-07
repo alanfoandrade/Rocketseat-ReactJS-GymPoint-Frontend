@@ -62,6 +62,8 @@ export const Container = styled.div`
       margin-top: 6px;
       font-weight: bold;
       opacity: 0.9;
+      display: block;
+      margin-top: 5px;
     }
 
     button {

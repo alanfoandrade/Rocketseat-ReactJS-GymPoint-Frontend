@@ -30,6 +30,8 @@ export const Content = styled.div`
     align-self: flex-start;
     font-weight: bold;
     opacity: 0.9;
+    display: block;
+    margin-top: 5px;
   }
 `;
 

@@ -24,13 +24,13 @@ export default function DefaultLayout(props) {
       <Wrapper largeList={largeList}>
         <Content>
           <OptionsHeader
+            screenTitle={screenTitle}
             btnBack={btnBack}
             btnSave={btnSave}
             btnAdd={btnAdd}
             searchBox={searchBox}
             largeList={largeList}
             navSession={navSession}
-            screenTitle={screenTitle}
           />
           <Container largeList={largeList}>{children}</Container>
         </Content>

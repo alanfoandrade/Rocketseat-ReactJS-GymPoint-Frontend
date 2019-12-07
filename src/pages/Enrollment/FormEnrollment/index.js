@@ -1,15 +1,14 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
-
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
-import Select from 'react-select';
-import ReactDatePicker from 'react-datepicker';
 import { Form, Input } from '@rocketseat/unform';
-import { parseISO } from 'date-fns';
+import { format, parseISO, addMonths } from 'date-fns';
 import pt from 'date-fns/locale/pt';
-
-// import * as Yup from 'yup';
+import * as Yup from 'yup';
+import { formatPriceBrl } from '../../../utils/format';
+import ReactSelect from '../../../components/ReactSelect';
+import DatePicker from '../../../components/DatePicker';
 
 import {
   createEnrollmentRequest,
@@ -21,11 +20,17 @@ import { loadStudentRequest } from '../../../store/modules/student/actions';
 import DefaultLayout from '../../_layouts/default';
 import { Content, InputContainer, selectStyle } from './styles';
 
-/* const schema = Yup.object().shape({
-  name: Yup.string().required('Nome é requerido'),
-  title: Yup.string().required('Plano requerido'),
-  formattedStart: Yup.string().required('Data de início requerida'),
-}); */
+const schema = Yup.object().shape({
+  student_id: Yup.number()
+    .typeError('Selecione um Aluno')
+    .required('Aluno requerido'),
+  plan_id: Yup.number()
+    .typeError('Selecione um Plano')
+    .required('Plano requerido'),
+  start_date: Yup.date('Formato de data inválido')
+    .typeError('Selecione uma Data')
+    .required('Data de início requerida'),
+});
 
 export default function FormEnrollment({ match }) {
   const { path } = match;
@@ -42,53 +47,61 @@ export default function FormEnrollment({ match }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const students = useSelector(s =>
-    s.student.students.map(student => ({
+  const students = useSelector(state =>
+    state.student.students.map(student => ({
       id: student.id,
       title: student.name,
     }))
   );
 
-  const { plans } = useSelector(s => s.plan);
+  const { plans } = useSelector(state => state.plan);
 
   const { enrollUpdating } = useSelector(state => state.enrollment);
 
-  const [handleStudent, setHandleStudent] = useState(
-    enrollUpdating.student || {}
-  );
-
-  console.tron.log(handleStudent);
-
   const [handlePlan, setHandlePlan] = useState(enrollUpdating.plan || {});
 
-  const [handleDate, sethandleDate] = useState(
+  const [handleDate, setHandleDate] = useState(
     enrollUpdating.start_date ? parseISO(enrollUpdating.start_date) : new Date()
   );
 
-  function handleStudentChange(student) {
-    setHandleStudent(student);
-  }
+  const end_date = useMemo(
+    () =>
+      handlePlan.length
+        ? format(
+            addMonths(handleDate, handlePlan.length),
+            "dd 'de' MMMM 'de' yyyy",
+            { locale: pt }
+          )
+        : '',
+    [handleDate, handlePlan.length]
+  );
+
+  const total = useMemo(
+    () =>
+      handlePlan.length
+        ? formatPriceBrl(handlePlan.length * handlePlan.price)
+        : '',
+    [handlePlan]
+  );
 
   function handlePlanChange(plan) {
     setHandlePlan(plan);
   }
 
   function handleDateChange(date) {
-    sethandleDate(date);
+    setHandleDate(date);
   }
 
-  function handleSubmit() {
+  function handleSubmit({ student_id, plan_id, start_date }) {
     if (url === 'cadastrar') {
-      dispatch(
-        createEnrollmentRequest(handleStudent.id, handlePlan.id, handleDate)
-      );
+      dispatch(createEnrollmentRequest(student_id, plan_id, start_date));
     } else {
       dispatch(
         updateEnrollmentRequest(
           enrollUpdating.id,
-          handleStudent.id,
-          handlePlan.id,
-          handleDate
+          student_id,
+          plan_id,
+          start_date
         )
       );
     }
@@ -97,66 +110,74 @@ export default function FormEnrollment({ match }) {
   return (
     <DefaultLayout screenTitle={screenTitle} btnBack btnSave>
       <Content>
-        <Form initialData={enrollUpdating} id="handler" onSubmit={handleSubmit}>
+        <Form
+          schema={schema}
+          initialData={enrollUpdating}
+          id="handler"
+          onSubmit={handleSubmit}
+        >
           <label>
             ALUNO
-            <Select
-              id="student_select"
-              name="id"
+            <ReactSelect
+              name="student_id"
               options={students}
-              getOptionLabel={option => option.title}
-              getOptionValue={option => option.id}
               styles={selectStyle}
               placeholder="Selecione o aluno"
-              onChange={option => handleStudentChange(option)}
-              defaultValue={{
-                id: handleStudent.id,
-                title: handleStudent.name,
-              }}
+              getOptionLabel={option => option.title}
+              getOptionValue={option => option.id}
+              defaultValue={
+                enrollUpdating.student && {
+                  id: enrollUpdating.student.id,
+                  title: enrollUpdating.student.name,
+                }
+              }
             />
           </label>
           <InputContainer>
             <label>
               PLANO
-              <Select
-                id="plan_select"
-                name="id"
+              <ReactSelect
+                name="plan_id"
                 options={plans}
-                getOptionLabel={option => option.title}
-                getOptionValue={option => option.id}
                 styles={selectStyle}
                 placeholder="Selecione o plano"
+                getOptionLabel={option => option.title}
+                getOptionValue={option => option.id}
                 onChange={option => handlePlanChange(option)}
-                defaultValue={{
-                  id: handlePlan.id,
-                  title: handlePlan.title,
-                }}
+                defaultValue={
+                  enrollUpdating.plan && {
+                    id: enrollUpdating.plan.id,
+                    title: enrollUpdating.plan.title,
+                  }
+                }
               />
             </label>
             <label>
               DATA DE INÍCIO
-              <ReactDatePicker
-                dateFormat="dd 'de' MMMM 'de' yyyy"
-                selected={handleDate}
+              <DatePicker
+                name="start_date"
                 locale={pt}
+                selected={handleDate}
+                dateFormat="dd 'de' MMMM 'de' yyyy"
                 onChange={date => handleDateChange(date)}
               />
             </label>
             <label>
               DATA DE TÉRMINO
               <Input
-                disabled
-                name="formattedEnd"
+                name="end_date"
+                value={end_date}
                 placeholder="Data de término"
+                disabled
               />
             </label>
             <label id="price">
               VALOR TOTAL
               <Input
-                disabled
-                value="0"
                 name="price"
+                value={total}
                 placeholder="Valor total"
+                disabled
               />
             </label>
           </InputContainer>

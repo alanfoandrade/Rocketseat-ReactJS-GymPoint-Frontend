@@ -84,6 +84,15 @@ export const AnswerModal = styled(Modal)`
         }
       }
 
+      span {
+        color: ${colors.watermelon};
+        align-self: flex-start;
+        font-weight: bold;
+        opacity: 0.9;
+        display: block;
+        margin-top: 5px;
+      }
+
       button {
         font-size: 16px;
         font-weight: bold;

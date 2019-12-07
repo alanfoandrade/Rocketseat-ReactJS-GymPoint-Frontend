@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Form, Input } from '@rocketseat/unform';
+import * as Yup from 'yup';
 import {
   loadHelpOrderRequest,
   updateHelpOrderRequest,
@@ -9,6 +10,12 @@ import {
 
 import DefaultLayout from '../_layouts/default';
 import { HelpOrderTable, AnswerModal } from './styles';
+
+const schema = Yup.object().shape({
+  answer: Yup.string()
+    .typeError('Digite uma resposta')
+    .required('Resposta requerida'),
+});
 
 export default function HelpOrder() {
   const dispatch = useDispatch();
@@ -70,7 +77,7 @@ export default function HelpOrder() {
               <p>{HelpAnswer.question}</p>
 
               <h2>SUA RESPOSTA</h2>
-              <Form id="answer-form" onSubmit={handleSubmit}>
+              <Form schema={schema} id="answer-form" onSubmit={handleSubmit}>
                 <Input
                   multiline
                   form="answer-form"

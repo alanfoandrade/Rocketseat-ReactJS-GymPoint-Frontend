@@ -8,6 +8,15 @@ export const Content = styled.div`
     color: #444;
     font-weight: bold;
   }
+
+  form span {
+    color: ${colors.watermelon};
+    align-self: flex-start;
+    font-weight: bold;
+    opacity: 0.9;
+    display: block;
+    margin-top: 5px;
+  }
 `;
 
 export const InputContainer = styled.div`

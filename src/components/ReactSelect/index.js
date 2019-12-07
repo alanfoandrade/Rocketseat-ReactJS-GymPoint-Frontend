@@ -1,192 +1,66 @@
-import React, { useEffect, useState, useMemo } from 'react';
-import ReactRouterPropTypes from 'react-router-prop-types';
-import { useDispatch, useSelector } from 'react-redux';
-import { Form, Input } from '@rocketseat/unform';
-import { addMonths, format } from 'date-fns';
-import pt from 'date-fns/locale/pt';
-import ReactDatePicker from 'react-datepicker';
-// import * as Yup from 'yup';
+import React, { useRef, useEffect } from 'react';
 import Select from 'react-select';
-import AsyncSelect from 'react-select/async';
-import { FormContainer, GridContainer } from './styles';
 
-import Container from '~/components/Container';
-import PageHeader from '~/components/PageHeader';
+import { useField } from '@rocketseat/unform';
 
-import { studentListRequest } from '~/store/modules/students/actions';
-import { planListRequest } from '~/store/modules/plans/actions';
-import {
-  enrollmentCreateRequest,
-  enrollmentUpdateRequest,
-  enrollmentListRequest,
-} from '~/store/modules/enrollments/actions';
-import api from '~/services/api';
-// import { Container } from './styles';
+export default function ReactSelect({
+  name,
+  label,
+  options,
+  multiple,
+  ...rest
+}) {
+  const ref = useRef(null);
+  const { fieldName, registerField, defaultValue, error } = useField(name);
 
-export default function EnrollmentForm({ match }) {
-  const dispatch = useDispatch();
-  const { id } = match.params;
-  const [plan, setPlan] = useState('');
-  const [selectedStudent, setSelectedStudent] = useState({});
-  const [startDate, setStartDate] = useState(new Date());
-  const [enrollmentById, setEnrollment] = useState('');
+  function parseSelectValue(selectRef) {
+    const selectValue = selectRef.state.value;
+    if (!multiple) {
+      return selectValue ? selectValue.id : '';
+    }
 
-  async function loadStudents(value) {
-    const res = await api.get(`students?name=${value}`);
-    return new Promise(resolve => {
-      resolve(res.data);
-    });
-  }
-
-  async function setEnrollmentById(id) {
-    const res = await api.get(`enrollments/${id}`);
-    setEnrollment(res.data);
+    return selectValue ? selectValue.map(option => option.id) : [];
   }
 
   useEffect(() => {
-    async function loadData() {
-      await dispatch(studentListRequest());
-      await dispatch(planListRequest());
-      loadStudents();
-      if (id) {
-        await dispatch(enrollmentListRequest());
-        setEnrollmentById(id);
-      }
+    registerField({
+      name: fieldName,
+      ref: ref.current,
+      path: 'state.value',
+      parseValue: parseSelectValue,
+      clearValue: selectRef => {
+        selectRef.select.clearValue();
+      },
+    });
+  }, [ref.current, fieldName]); // eslint-disable-line
+
+  function getDefaultValue() {
+    if (!defaultValue) return null;
+
+    if (!multiple) {
+      return options.find(option => option.id === defaultValue);
     }
-    loadData();
-  }, [dispatch, id]);
 
-  // const defaultStudents = useSelector(state => state.students.list);
-  const plans = useSelector(state => state.plans.list);
-
-  const enrollment = useSelector(state => state.enrollments.list).find(
-    enrollment => enrollment.id === Number(id)
-  );
-  const total = useMemo(() => {
-    if (plan) {
-      return (plan.duration * plan.price).toFixed(2);
-    }
-    return 0;
-  }, [plan]);
-
-  const endDate = useMemo(() => {
-    if (plan) {
-      return format(
-        addMonths(startDate, Number(plan.duration)),
-        "d 'de' MMMM 'de' yyyy",
-        { locale: pt }
-      );
-    }
-    return 0;
-  }, [plan, startDate]);
-
-  function handlePlanChange(option) {
-    setPlan(option);
-  }
-
-  function handleSubmit() {
-    if (!id) {
-      dispatch(
-        enrollmentCreateRequest({
-          student_id: selectedStudent.id,
-          plan_id: plan.id,
-          start_date: startDate,
-        })
-      );
-    } else {
-      // console.log(selectedEnrollment);
-      dispatch(
-        enrollmentUpdateRequest({
-          id,
-          student_id: enrollmentById.student.id,
-          plan_id: plan.id,
-          start_date: startDate,
-        })
-      );
-    }
+    return options.filter(option => defaultValue.includes(option.id));
   }
 
   return (
-    <Container>
-      <FormContainer>
-        <PageHeader
-          title={id ? 'Edição de matrículas' : 'Criação de matrículas'}
-          action="VOLTAR"
-          createUri="/enrollments"
-        />
-        <button type="submit" form="enrollmentForm" value="Submit">
-          SALVAR
-        </button>
+    <>
+      {label && <label htmlFor={fieldName}>{label}</label>}
 
-        <Form id="enrollmentForm" onSubmit={handleSubmit}>
-          <label htmlFor="title">
-            <p>ALUNO</p>
-            <AsyncSelect
-              isDisabled={!!id}
-              defaultOptions
-              value={enrollmentById.student}
-              getOptionValue={option => option.id}
-              getOptionLabel={option => option.name}
-              cacheOptions
-              placeholder="Buscar aluno"
-              loadOptions={loadStudents}
-              onChange={e => setSelectedStudent(e)}
-            />
-          </label>
-          <GridContainer>
-            <div id="plansSelect">
-              <label htmlFor="plan">
-                <p>PLANO</p>
-                <Select
-                  getOptionLabel={option => option.title}
-                  getOptionValue={option => option.id}
-                  placeholder="Selecionar plano"
-                  options={plans}
-                  defaultValue={enrollment ? enrollment.plan : plans[0]}
-                  onChange={option => handlePlanChange(option)}
-                />
-              </label>
-            </div>
-            <div>
-              <label htmlFor="start_date">
-                <p>DATA DE INÍCIO</p>
-                <ReactDatePicker
-                  dateFormat="dd/MM/yyyy"
-                  selected={startDate}
-                  locale={pt}
-                  onChange={date => setStartDate(date)}
-                />
-              </label>
-            </div>
-            <div>
-              <label htmlFor="end_date">
-                <p>DATA DE TÉRMINO</p>
-                <Input
-                  disabled
-                  name="end_date"
-                  id="end_date"
-                  value={endDate || 'Data final'}
-                />
-              </label>
-            </div>
-            <div>
-              <label htmlFor="total">
-                <p>PREÇO TOTAL (em R$)</p>
-                <Input
-                  disabled
-                  name="total"
-                  id="total"
-                  value={total || 'Valor final'}
-                />
-              </label>
-            </div>
-          </GridContainer>
-        </Form>
-      </FormContainer>
-    </Container>
+      <Select
+        name={fieldName}
+        aria-label={fieldName}
+        options={options}
+        isMulti={multiple}
+        defaultValue={getDefaultValue()}
+        ref={ref}
+        getOptionValue={option => option.id}
+        getOptionLabel={option => option.title}
+        {...rest}
+      />
+
+      {error && <span>{error}</span>}
+    </>
   );
 }
-
-EnrollmentForm.propTypes = {
-  match: ReactRouterPropTypes.match.isRequired,
-};
