@@ -1,6 +1,7 @@
-export function loadHelpOrderRequest() {
+export function loadHelpOrderRequest(page) {
   return {
     type: '@helporder/LOAD_REQUEST',
+    payload: { page },
   };
 }
 

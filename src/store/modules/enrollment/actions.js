@@ -12,9 +12,10 @@ export function createEnrollmentSuccess(enrollment) {
   };
 }
 
-export function loadEnrollmentRequest() {
+export function loadEnrollmentRequest(page) {
   return {
     type: '@enrollment/LOAD_REQUEST',
+    payload: { page },
   };
 }
 
@@ -55,13 +56,6 @@ export function updateEnrollmentSuccess(enrollment) {
 export function deleteEnrollmentRequest(id) {
   return {
     type: '@enrollment/DELETE_REQUEST',
-    payload: { id },
-  };
-}
-
-export function deleteEnrollmentSuccess(id) {
-  return {
-    type: '@enrollment/DELETE_SUCCESS',
     payload: { id },
   };
 }

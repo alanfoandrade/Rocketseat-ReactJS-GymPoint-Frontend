@@ -1,11 +1,9 @@
 import React, { useRef, useEffect, useState } from 'react';
 import ReactDatePicker from 'react-datepicker';
 import PropTypes from 'prop-types';
-import pt from 'date-fns/locale/pt';
+import pt from 'date-fns/locale/pt-BR';
 
 import { useField } from '@rocketseat/unform';
-
-import 'react-datepicker/dist/react-datepicker.css';
 
 export default function DatePicker({ name, ...rest }) {
   const ref = useRef(null);
@@ -23,6 +21,12 @@ export default function DatePicker({ name, ...rest }) {
     });
   }, [ref.current, fieldName]); // eslint-disable-line
 
+  const DateButton = ({ value, onClick }) => (
+    <button type="button" className="date-button" onClick={onClick}>
+      {value}
+    </button>
+  );
+
   return (
     <>
       <ReactDatePicker
@@ -30,7 +34,9 @@ export default function DatePicker({ name, ...rest }) {
         selected={selected}
         locale={pt}
         dateFormat="dd 'de' MMMM 'de' yyyy"
+        placeholderText="Selecione uma data"
         onChange={date => setSelected(date)}
+        customInput={<DateButton />}
         ref={ref}
         {...rest}
       />
@@ -41,4 +47,11 @@ export default function DatePicker({ name, ...rest }) {
 
 DatePicker.propTypes = {
   name: PropTypes.string.isRequired,
+  value: PropTypes.string,
+  onClick: PropTypes.func,
+};
+
+DatePicker.defaultProps = {
+  value: null,
+  onClick: null,
 };

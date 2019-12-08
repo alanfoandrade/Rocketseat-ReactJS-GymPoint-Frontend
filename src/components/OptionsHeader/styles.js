@@ -86,7 +86,7 @@ export const AddButton = styled.button`
   color: #fff;
   border: none;
   padding: 0 16px;
-  margin-right: 16px;
+
   transition: background 0.2s;
   justify-content: center;
   align-items: center;
@@ -109,8 +109,9 @@ export const SearchBox = styled(Form)`
   padding: 0 10px;
   align-items: center;
   justify-content: center;
+  margin-left: 16px;
 
-  button {
+  div {
     display: flex;
     align-items: center;
     background: none;

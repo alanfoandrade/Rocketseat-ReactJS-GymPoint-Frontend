@@ -3,6 +3,7 @@ import produce from 'immer';
 const INITIAL_STATE = {
   plans: [],
   planUpdating: {},
+  page: 1,
 };
 
 export default function plan(state = INITIAL_STATE, action) {
@@ -12,18 +13,23 @@ export default function plan(state = INITIAL_STATE, action) {
         draft.plans.push(action.payload.plan);
         break;
       }
+
       case '@plan/LOAD_SUCCESS': {
         draft.plans = action.payload.plans;
+        draft.page = action.payload.page;
         break;
       }
+
       case '@plan/SET_UPDATING': {
         draft.planUpdating = action.payload.planUpdating;
         break;
       }
+
       case '@plan/RESET_UPDATING': {
         draft.planUpdating = {};
         break;
       }
+
       case '@plan/UPDATE_SUCCESS': {
         const planIndex = draft.plans.findIndex(
           p => p.id === action.payload.plan.id
@@ -36,16 +42,7 @@ export default function plan(state = INITIAL_STATE, action) {
         draft.planUpdating = {};
         break;
       }
-      case '@plan/DELETE_SUCCESS': {
-        const planIndex = draft.plans.findIndex(
-          s => s.id === action.payload.id
-        );
 
-        if (planIndex >= 0) {
-          draft.plans.splice(planIndex, 1);
-        }
-        break;
-      }
       default:
     }
   });

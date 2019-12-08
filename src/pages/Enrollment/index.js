@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/control-has-associated-label */
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { confirmAlert } from 'react-confirm-alert';
 import { format, parseISO } from 'date-fns';
@@ -14,31 +14,35 @@ import {
 
 import DefaultLayout from '../_layouts/default';
 import { Content, EnrollmentTable } from './styles';
+import { StyledNav } from '../_layouts/default/styles';
 
 export default function Enrollment() {
-  const enrolls = useSelector(state =>
-    state.enrollment.enrollments.map(enroll => ({
-      ...enroll,
-      formattedStart: format(
-        parseISO(enroll.start_date),
-        "dd 'de' MMMM 'de' yyyy",
-        { locale: pt }
-      ),
-      formattedEnd: format(
-        parseISO(enroll.end_date),
-        "dd 'de' MMMM 'de' yyyy",
-        { locale: pt }
-      ),
-    }))
-  );
-
   const dispatch = useDispatch();
 
+  const enroll = useSelector(state => ({
+    ...state.enrollment,
+    enrollments: state.enrollment.enrollments.map(e => ({
+      ...e,
+      formattedStart: format(parseISO(e.start_date), "dd 'de' MMMM 'de' yyyy", {
+        locale: pt,
+      }),
+      formattedEnd: format(parseISO(e.end_date), "dd 'de' MMMM 'de' yyyy", {
+        locale: pt,
+      }),
+    })),
+  }));
+
+  const [handlePage, sethandlePage] = useState(1);
+
+  function pageChange(action) {
+    sethandlePage(action === 'back' ? handlePage - 1 : handlePage + 1);
+  }
+
   useEffect(() => {
-    dispatch(loadEnrollmentRequest());
+    dispatch(loadEnrollmentRequest(handlePage));
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [handlePage]);
 
   function handleDelete({ id, student }) {
     confirmAlert({
@@ -66,11 +70,28 @@ export default function Enrollment() {
     <DefaultLayout
       screenTitle="Gerenciando Matrículas"
       navSession="matricula"
+      navVisible
       btnAdd
-      searchBox
       largeList
     >
       <Content>
+        <StyledNav>
+          <button
+            type="button"
+            onClick={() => pageChange('back')}
+            disabled={handlePage < 2}
+          >
+            {'<<'}
+          </button>
+          <span>página {handlePage}</span>
+          <button
+            type="button"
+            onClick={() => pageChange('next')}
+            disabled={enroll.enrollments.length < 20}
+          >
+            {'>>'}
+          </button>
+        </StyledNav>
         <EnrollmentTable>
           <thead>
             <tr>
@@ -83,7 +104,7 @@ export default function Enrollment() {
             </tr>
           </thead>
           <tbody>
-            {enrolls.map(enrollment => (
+            {enroll.enrollments.map(enrollment => (
               <tr key={enrollment.id}>
                 <td id="name-student">{enrollment.student.name}</td>
                 <td>{enrollment.plan.title}</td>

@@ -12,16 +12,17 @@ export function createStudentSuccess(student) {
   };
 }
 
-export function loadStudentRequest() {
+export function loadStudentRequest(page, name) {
   return {
     type: '@student/LOAD_REQUEST',
+    payload: { page, name },
   };
 }
 
-export function loadStudentSuccess(students) {
+export function loadStudentSuccess(page, students) {
   return {
     type: '@student/LOAD_SUCCESS',
-    payload: { students },
+    payload: { page, students },
   };
 }
 
@@ -55,13 +56,6 @@ export function updateStudentSuccess(student) {
 export function deleteStudentRequest(id) {
   return {
     type: '@student/DELETE_REQUEST',
-    payload: { id },
-  };
-}
-
-export function deleteStudentSuccess(id) {
-  return {
-    type: '@student/DELETE_SUCCESS',
     payload: { id },
   };
 }

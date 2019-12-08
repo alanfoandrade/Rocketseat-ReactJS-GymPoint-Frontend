@@ -100,4 +100,71 @@ div.react-confirm-alert-button-group{
     }
   }
 }
+
+div.react-datepicker__day--selected {
+    background-color: ${colors.watermelon};
+    opacity:0.8;
+
+    &:hover {
+      background: ${darken(0.1, `${colors.watermelon}`)};
+    }
+  }
 `;
+
+export const selectStyle = {
+  control: (styles, state) => ({
+    ...styles,
+    backgroundColor: 'white',
+    height: '45px',
+    marginTop: '8px',
+    border: `1px solid #ddd`,
+    boxShadow: state.isFocused && `1px solid #ddd`,
+    '&:hover': {
+      border: `1px solid ${colors.watermelon}`,
+    },
+  }),
+
+  option: (styles, { isFocused, isSelected }) => ({
+    ...styles,
+    backgroundColor: isFocused ? '#ccc' : 'white',
+    color: '#666',
+    cursor: 'pointer',
+    fontWeight: 'normal',
+    fontSize: '16px',
+    lineHeight: '1.25',
+
+    ':active': {
+      ...styles[':active'],
+      backgroundColor: isSelected || `${colors.watermelon}`,
+      color: '#fff',
+    },
+  }),
+
+  input: styles => ({
+    ...styles,
+    height: '30px',
+    fontWeight: 'normal',
+    fontSize: '16px',
+    lineHeight: '1.25',
+    paddingLeft: '8px',
+    display: 'flex',
+    alignItems: 'center',
+  }),
+
+  placeholder: styles => ({
+    ...styles,
+    color: '#999',
+    fontWeight: 'normal',
+    fontSize: '16px',
+    lineHeight: '1.25',
+    paddingLeft: '8px',
+  }),
+
+  singleValue: styles => ({
+    ...styles,
+    color: '#666',
+    fontWeight: 'normal',
+    fontSize: '16px',
+    lineHeight: '1.25',
+  }),
+};

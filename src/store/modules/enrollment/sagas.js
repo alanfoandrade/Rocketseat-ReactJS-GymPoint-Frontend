@@ -6,9 +6,9 @@ import history from '../../../services/history';
 
 import {
   createEnrollmentSuccess,
+  loadEnrollmentRequest,
   loadEnrollmentSuccess,
   updateEnrollmentSuccess,
-  deleteEnrollmentSuccess,
 } from './actions';
 
 export function* createEnrollment({ payload }) {
@@ -31,9 +31,10 @@ export function* createEnrollment({ payload }) {
   }
 }
 
-export function* loadEnrollment() {
+export function* loadEnrollment({ payload }) {
   try {
-    const { data } = yield call(api.get, 'enrollments');
+    const { page = 1 } = payload;
+    const { data } = yield call(api.get, `enrollments?p=${page}`);
 
     if (data) {
       yield put(loadEnrollmentSuccess(data));
@@ -72,7 +73,8 @@ export function* deleteEnrollment({ payload }) {
 
     if (response) {
       toast.success(response.data.message);
-      yield put(deleteEnrollmentSuccess(id));
+
+      yield put(loadEnrollmentRequest());
     } else toast.error('Falha ao excluir matrícula');
   } catch (err) {
     toast.error(err.response.data.error);

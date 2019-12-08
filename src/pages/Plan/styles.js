@@ -1,7 +1,5 @@
 import styled from 'styled-components';
 
-export const Content = styled.div``;
-
 export const PlanTable = styled.table`
   width: 100%;
 
@@ -39,6 +37,10 @@ export const PlanTable = styled.table`
 
   #length-title {
     width: 30%;
+  }
+
+  #options {
+    width: 20%;
   }
 
   div {

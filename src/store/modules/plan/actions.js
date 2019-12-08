@@ -12,16 +12,17 @@ export function createPlanSuccess(plan) {
   };
 }
 
-export function loadPlanRequest() {
+export function loadPlanRequest(page, name) {
   return {
     type: '@plan/LOAD_REQUEST',
+    payload: { page, name },
   };
 }
 
-export function loadPlanSuccess(plans) {
+export function loadPlanSuccess(page, plans) {
   return {
     type: '@plan/LOAD_SUCCESS',
-    payload: { plans },
+    payload: { page, plans },
   };
 }
 
@@ -55,13 +56,6 @@ export function updatePlanSuccess(plan) {
 export function deletePlanRequest(id) {
   return {
     type: '@plan/DELETE_REQUEST',
-    payload: { id },
-  };
-}
-
-export function deletePlanSuccess(id) {
-  return {
-    type: '@plan/DELETE_SUCCESS',
     payload: { id },
   };
 }

@@ -1,4 +1,5 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
+
 import React, { useEffect, useState, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
@@ -18,7 +19,9 @@ import { loadPlanRequest } from '../../../store/modules/plan/actions';
 import { loadStudentRequest } from '../../../store/modules/student/actions';
 
 import DefaultLayout from '../../_layouts/default';
-import { Content, InputContainer, selectStyle } from './styles';
+import ReactAsyncSelect from '../../../components/ReactAsyncSelect';
+import { Content, InputContainer } from './styles';
+import { selectStyle } from '../../../styles/global';
 
 const schema = Yup.object().shape({
   student_id: Yup.number()
@@ -47,12 +50,7 @@ export default function FormEnrollment({ match }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const students = useSelector(state =>
-    state.student.students.map(student => ({
-      id: student.id,
-      title: student.name,
-    }))
-  );
+  const { students } = useSelector(state => state.student);
 
   const { plans } = useSelector(state => state.plan);
 
@@ -118,17 +116,17 @@ export default function FormEnrollment({ match }) {
         >
           <label>
             ALUNO
-            <ReactSelect
+            <ReactAsyncSelect
               name="student_id"
+              placeholder="Selecione o plano"
               options={students}
-              styles={selectStyle}
-              placeholder="Selecione o aluno"
-              getOptionLabel={option => option.title}
+              cacheOptions
+              getOptionLabel={option => option.name}
               getOptionValue={option => option.id}
               defaultValue={
                 enrollUpdating.student && {
                   id: enrollUpdating.student.id,
-                  title: enrollUpdating.student.name,
+                  name: enrollUpdating.student.name,
                 }
               }
             />
@@ -154,13 +152,15 @@ export default function FormEnrollment({ match }) {
             </label>
             <label>
               DATA DE INÍCIO
-              <DatePicker
-                name="start_date"
-                locale={pt}
-                selected={handleDate}
-                dateFormat="dd 'de' MMMM 'de' yyyy"
-                onChange={date => handleDateChange(date)}
-              />
+              <div id="date-input">
+                <DatePicker
+                  name="start_date"
+                  locale={pt}
+                  selected={handleDate}
+                  dateFormat="dd 'de' MMMM 'de' yyyy"
+                  onChange={date => handleDateChange(date)}
+                />
+              </div>
             </label>
             <label>
               DATA DE TÉRMINO

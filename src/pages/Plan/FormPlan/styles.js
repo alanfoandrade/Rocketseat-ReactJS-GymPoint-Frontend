@@ -20,6 +20,14 @@ export const Content = styled.div`
     &::placeholder {
       color: #999999;
     }
+
+    &:hover {
+      border: 1px solid ${colors.watermelon};
+    }
+
+    &:disabled {
+      border: 1px solid #ddd;
+    }
   }
 
   div:last-child input {

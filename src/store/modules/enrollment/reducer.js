@@ -41,16 +41,6 @@ export default function enrollment(state = INITIAL_STATE, action) {
         break;
       }
 
-      case '@enrollment/DELETE_SUCCESS': {
-        const enrollmentIndex = draft.enrollments.findIndex(
-          enroll => enroll.id === action.payload.id
-        );
-
-        if (enrollmentIndex >= 0) {
-          draft.enrollments.splice(enrollmentIndex, 1);
-        }
-        break;
-      }
       default:
     }
   });

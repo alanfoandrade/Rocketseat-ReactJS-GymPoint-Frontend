@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/control-has-associated-label */
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { confirmAlert } from 'react-confirm-alert';
 import history from '../../services/history';
@@ -10,18 +10,31 @@ import {
 } from '../../store/modules/plan/actions';
 
 import DefaultLayout from '../_layouts/default';
-import { Content, PlanTable } from './styles';
+import { StyledNav } from '../_layouts/default/styles';
+import { PlanTable } from './styles';
 
 export default function Plan() {
   const dispatch = useDispatch();
 
+  const { plans, page } = useSelector(state => state.plan);
+
+  const [handlePage, sethandlePage] = useState(page);
+
   useEffect(() => {
-    dispatch(loadPlanRequest());
+    dispatch(loadPlanRequest(handlePage));
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [handlePage]);
 
-  const { plans } = useSelector(state => state.plan);
+  useEffect(() => {
+    sethandlePage(page);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [page]);
+
+  function pageChange(action) {
+    sethandlePage(action === 'back' ? handlePage - 1 : handlePage + 1);
+  }
 
   function handleUpdate(plan) {
     dispatch(setPlanUpdating(plan));
@@ -49,40 +62,56 @@ export default function Plan() {
     <DefaultLayout
       screenTitle="Gerenciando Planos"
       navSession="plano"
+      navVisible
       btnAdd
       searchBox
     >
-      <Content>
-        <PlanTable>
-          <thead>
-            <tr>
-              <th id="plan-title">TÍTULO</th>
-              <th id="length-title">DURAÇÃO</th>
-              <th id="price-title">PREÇO MENSAL</th>
-              <th />
+      <StyledNav>
+        <button
+          type="button"
+          onClick={() => pageChange('back')}
+          disabled={handlePage < 2}
+        >
+          {'<<'}
+        </button>
+        <span>página {handlePage}</span>
+        <button
+          type="button"
+          onClick={() => pageChange('next')}
+          disabled={plans.length < 20}
+        >
+          {'>>'}
+        </button>
+      </StyledNav>
+      <PlanTable>
+        <thead>
+          <tr>
+            <th id="plan-title">TÍTULO</th>
+            <th id="length-title">DURAÇÃO</th>
+            <th id="price-title">PREÇO MENSAL</th>
+            <th id="options" />
+          </tr>
+        </thead>
+        <tbody>
+          {plans.map(plan => (
+            <tr key={plan.id}>
+              <td id="plan-name">{plan.title}</td>
+              <td>{plan.length}</td>
+              <td>{plan.price}</td>
+              <td>
+                <div>
+                  <button type="button" onClick={() => handleUpdate(plan)}>
+                    editar
+                  </button>
+                  <button type="button" onClick={() => handleDelete(plan)}>
+                    apagar
+                  </button>
+                </div>
+              </td>
             </tr>
-          </thead>
-          <tbody>
-            {plans.map(plan => (
-              <tr key={plan.id}>
-                <td id="plan-name">{plan.title}</td>
-                <td>{plan.length}</td>
-                <td>{plan.price}</td>
-                <td>
-                  <div>
-                    <button type="button" onClick={() => handleUpdate(plan)}>
-                      editar
-                    </button>
-                    <button type="button" onClick={() => handleDelete(plan)}>
-                      apagar
-                    </button>
-                  </div>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </PlanTable>
-      </Content>
+          ))}
+        </tbody>
+      </PlanTable>
     </DefaultLayout>
   );
 }

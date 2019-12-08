@@ -11,6 +11,7 @@ import {
 
 import DefaultLayout from '../_layouts/default';
 import { HelpOrderTable, AnswerModal } from './styles';
+import { StyledNav } from '../_layouts/default/styles';
 
 const schema = Yup.object().shape({
   answer: Yup.string()
@@ -26,20 +27,26 @@ export default function HelpOrder() {
     visible: false,
   });
 
-  useEffect(() => {
-    dispatch(loadHelpOrderRequest());
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  const { helporders } = useSelector(state => state.helporder);
-
   function handleModal(data) {
     setHelpAnswer({
       ...data,
       visible: !HelpAnswer.visible,
     });
   }
+
+  const { helporders } = useSelector(state => state.helporder);
+
+  const [handlePage, sethandlePage] = useState(1);
+
+  function pageChange(action) {
+    sethandlePage(action === 'back' ? handlePage - 1 : handlePage + 1);
+  }
+
+  useEffect(() => {
+    dispatch(loadHelpOrderRequest(handlePage));
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [handlePage]);
 
   function handleSubmit({ answer }) {
     dispatch(updateHelpOrderRequest(HelpAnswer.id, answer));
@@ -48,7 +55,28 @@ export default function HelpOrder() {
   }
 
   return (
-    <DefaultLayout screenTitle="Pedidos de auxílio" navSession="ajuda">
+    <DefaultLayout
+      screenTitle="Pedidos de auxílio"
+      navSession="ajuda"
+      navVisible
+    >
+      <StyledNav>
+        <button
+          type="button"
+          onClick={() => pageChange('back')}
+          disabled={handlePage < 2}
+        >
+          {'<<'}
+        </button>
+        <span>página {handlePage}</span>
+        <button
+          type="button"
+          onClick={() => pageChange('next')}
+          disabled={helporders.length < 20}
+        >
+          {'>>'}
+        </button>
+      </StyledNav>
       <HelpOrderTable>
         <thead>
           <tr>

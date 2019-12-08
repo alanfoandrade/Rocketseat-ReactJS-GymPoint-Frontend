@@ -25,6 +25,10 @@ export const Content = styled.div`
     &::placeholder {
       color: #999999;
     }
+
+    &:hover {
+      border: 1px solid ${colors.watermelon};
+    }
   }
 
   div:last-child input {

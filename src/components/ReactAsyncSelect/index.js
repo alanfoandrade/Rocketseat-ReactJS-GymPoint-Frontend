@@ -1,9 +1,13 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
 import { useField } from '@rocketseat/unform';
-import Select from 'react-select';
 import PropTypes from 'prop-types';
+import AsyncSelect from 'react-select/async';
 
-export default function ReactSelect({
+import { selectStyle } from '../../styles/global';
+import { loadStudentRequest } from '../../store/modules/student/actions';
+
+export default function ReactAsyncSelect({
   name,
   label,
   options,
@@ -13,21 +17,19 @@ export default function ReactSelect({
   const ref = useRef(null);
   const { fieldName, registerField, defaultValue, error } = useField(name);
 
-  function parseSelectValue(selectRef) {
-    const selectValue = selectRef.state.value;
-    if (!multiple) {
-      return selectValue ? selectValue.id : '';
-    }
+  const [optionSelected, setOptionSelected] = useState(
+    defaultValue && defaultValue.id
+  );
 
-    return selectValue ? selectValue.map(option => option.id) : [];
+  function handleSelected(option) {
+    setOptionSelected(option.id);
   }
 
   useEffect(() => {
     registerField({
       name: fieldName,
       ref: ref.current,
-      path: 'state.value',
-      parseValue: parseSelectValue,
+      path: 'props.selected',
       clearValue: selectRef => {
         selectRef.select.clearValue();
       },
@@ -44,18 +46,39 @@ export default function ReactSelect({
     return options.filter(option => defaultValue.includes(option.id));
   }
 
+  const dispatch = useDispatch();
+
+  const getStudent = inputValue => {
+    const prov = options.filter(i =>
+      i.name.toLowerCase().includes(inputValue.toLowerCase())
+    );
+    return prov;
+  };
+
+  const promiseOptions = inputValue =>
+    new Promise(resolve => {
+      dispatch(loadStudentRequest(1, inputValue));
+
+      resolve(getStudent(inputValue));
+    });
+
   return (
     <>
       {label && <label htmlFor={fieldName}>{label}</label>}
 
-      <Select
+      <AsyncSelect
         name={fieldName}
         aria-label={fieldName}
-        options={options}
-        isMulti={multiple}
+        defaultOptions={options}
+        loadOptions={promiseOptions}
         defaultValue={getDefaultValue()}
+        onInputChange={promiseOptions}
+        selected={optionSelected}
+        cacheOptions
         getOptionValue={option => option.id}
-        getOptionLabel={option => option.title}
+        getOptionLabel={option => option.name}
+        onChange={handleSelected}
+        styles={selectStyle}
         ref={ref}
         {...rest}
       />
@@ -65,14 +88,14 @@ export default function ReactSelect({
   );
 }
 
-ReactSelect.propTypes = {
+ReactAsyncSelect.propTypes = {
   options: PropTypes.arrayOf(PropTypes.shape({}).isRequired).isRequired,
   name: PropTypes.string.isRequired,
   label: PropTypes.string,
   multiple: PropTypes.bool,
 };
 
-ReactSelect.defaultProps = {
+ReactAsyncSelect.defaultProps = {
   label: '',
   multiple: false,
 };

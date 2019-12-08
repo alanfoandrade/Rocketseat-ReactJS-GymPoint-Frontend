@@ -1,7 +1,7 @@
 /* eslint-disable jsx-a11y/control-has-associated-label */
 
 import { confirmAlert } from 'react-confirm-alert';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import history from '../../services/history';
 import {
@@ -11,18 +11,31 @@ import {
 } from '../../store/modules/student/actions';
 
 import DefaultLayout from '../_layouts/default';
-import { Content, StudentTable } from './styles';
+import { StyledNav } from '../_layouts/default/styles';
+import { StudentTable } from './styles';
 
 export default function Student() {
   const dispatch = useDispatch();
 
+  const { students, page } = useSelector(state => state.student);
+
+  const [handlePage, sethandlePage] = useState(page);
+
   useEffect(() => {
-    dispatch(loadStudentRequest());
+    dispatch(loadStudentRequest(handlePage));
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [handlePage]);
 
-  const { students } = useSelector(state => state.student);
+  useEffect(() => {
+    sethandlePage(page);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [page]);
+
+  function pageChange(action) {
+    sethandlePage(action === 'back' ? handlePage - 1 : handlePage + 1);
+  }
 
   function handleUpdate(student) {
     dispatch(setStudentUpdating(student));
@@ -54,37 +67,52 @@ export default function Student() {
       searchBox
       largeList
     >
-      <Content>
-        <StudentTable>
-          <thead>
-            <tr>
-              <th id="name-title">NOME</th>
-              <th id="email-title">E-MAIL</th>
-              <th id="age-title">IDADE</th>
-              <th />
+      <StyledNav>
+        <button
+          type="button"
+          onClick={() => pageChange('back')}
+          disabled={handlePage < 2}
+        >
+          {'<<'}
+        </button>
+        <span>página {handlePage}</span>
+        <button
+          type="button"
+          onClick={() => pageChange('next')}
+          disabled={students.length < 20}
+        >
+          {'>>'}
+        </button>
+      </StyledNav>
+      <StudentTable>
+        <thead>
+          <tr>
+            <th id="name-title">NOME</th>
+            <th id="email-title">E-MAIL</th>
+            <th id="age-title">IDADE</th>
+            <th id="options" />
+          </tr>
+        </thead>
+        <tbody>
+          {students.map(student => (
+            <tr key={student.id}>
+              <td>{student.name}</td>
+              <td>{student.email}</td>
+              <td id="age-student">{student.age}</td>
+              <td>
+                <div>
+                  <button type="button" onClick={() => handleUpdate(student)}>
+                    editar
+                  </button>
+                  <button type="button" onClick={() => handleDelete(student)}>
+                    apagar
+                  </button>
+                </div>
+              </td>
             </tr>
-          </thead>
-          <tbody>
-            {students.map(student => (
-              <tr key={student.id}>
-                <td>{student.name}</td>
-                <td>{student.email}</td>
-                <td id="age-student">{student.age}</td>
-                <td>
-                  <div>
-                    <button type="button" onClick={() => handleUpdate(student)}>
-                      editar
-                    </button>
-                    <button type="button" onClick={() => handleDelete(student)}>
-                      apagar
-                    </button>
-                  </div>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </StudentTable>
-      </Content>
+          ))}
+        </tbody>
+      </StudentTable>
     </DefaultLayout>
   );
 }

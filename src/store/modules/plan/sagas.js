@@ -6,9 +6,9 @@ import history from '../../../services/history';
 
 import {
   createPlanSuccess,
+  loadPlanRequest,
   loadPlanSuccess,
   updatePlanSuccess,
-  deletePlanSuccess,
 } from './actions';
 
 export function* createPlan({ payload }) {
@@ -31,12 +31,16 @@ export function* createPlan({ payload }) {
   }
 }
 
-export function* loadPlan() {
+export function* loadPlan({ payload }) {
   try {
-    const { data } = yield call(api.get, 'plans');
+    let { page = 1 } = payload;
+    const { name = '' } = payload;
+    const { data } = yield call(api.get, `plans?p=${page}&q=${name}`);
+
+    if (name && page !== 1) page = 1;
 
     if (data) {
-      yield put(loadPlanSuccess(data));
+      yield put(loadPlanSuccess(page, data));
     } else toast.error('Falha ao buscar planos');
   } catch (err) {
     toast.error(err.response.data.error);
@@ -72,7 +76,8 @@ export function* deletePlan({ payload }) {
 
     if (response) {
       toast.success(response.data.message);
-      yield put(deletePlanSuccess(id));
+
+      yield put(loadPlanRequest());
     } else toast.error('Falha ao excluir aluno');
   } catch (err) {
     toast.error(err.response.data.error);

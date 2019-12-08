@@ -6,9 +6,9 @@ import history from '../../../services/history';
 
 import {
   createStudentSuccess,
+  loadStudentRequest,
   loadStudentSuccess,
   updateStudentSuccess,
-  deleteStudentSuccess,
 } from './actions';
 
 export function* createStudent({ payload }) {
@@ -33,12 +33,16 @@ export function* createStudent({ payload }) {
   }
 }
 
-export function* loadStudent() {
+export function* loadStudent({ payload }) {
   try {
-    const { data } = yield call(api.get, 'students');
+    let { page = 1 } = payload;
+    const { name = '' } = payload;
+    const { data } = yield call(api.get, `students?p=${page}&q=${name}`);
+
+    if (name && page !== 1) page = 1;
 
     if (data) {
-      yield put(loadStudentSuccess(data));
+      yield put(loadStudentSuccess(page, data));
     } else toast.error('Falha ao buscar alunos');
   } catch (err) {
     toast.error(err.response.data.error);
@@ -76,7 +80,8 @@ export function* deleteStudent({ payload }) {
 
     if (response) {
       toast.success(response.data.message);
-      yield put(deleteStudentSuccess(id));
+
+      yield put(loadStudentRequest());
     } else toast.error('Falha ao excluir aluno');
   } catch (err) {
     toast.error(err.response.data.error);

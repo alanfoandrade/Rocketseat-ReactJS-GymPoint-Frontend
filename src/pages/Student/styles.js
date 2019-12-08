@@ -1,7 +1,5 @@
 import styled from 'styled-components';
 
-export const Content = styled.div``;
-
 export const StudentTable = styled.table`
   width: 100%;
 
@@ -36,13 +34,19 @@ export const StudentTable = styled.table`
   }
 
   #age-title {
-    padding-right: 150px;
+    width: 8%;
+    padding-right: 80px;
     text-align: center;
   }
 
   #age-student {
-    padding-right: 150px;
+    width: 8%;
+    padding-right: 80px;
     text-align: center;
+  }
+
+  #options {
+    width: 12%;
   }
 
   div {

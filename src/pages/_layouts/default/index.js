@@ -1,10 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { Wrapper, Content, Container } from './styles';
-
 import Header from '../../../components/Header';
 import OptionsHeader from '../../../components/OptionsHeader';
+
+import { Wrapper, Content, Container } from './styles';
 
 export default function DefaultLayout(props) {
   const {
@@ -47,8 +47,13 @@ DefaultLayout.propTypes = {
   btnAdd: PropTypes.bool,
   searchBox: PropTypes.bool,
   largeList: PropTypes.bool,
-  children: PropTypes.element.isRequired,
+  children: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.shape({})),
+    PropTypes.shape({}),
+  ]).isRequired,
 };
+
+/*  */
 
 DefaultLayout.defaultProps = {
   navSession: null,

@@ -1,20 +1,18 @@
 import { takeLatest, call, put, all } from 'redux-saga/effects';
 
 import { toast } from 'react-toastify';
-import history from '../../../services/history';
 
 import { loadHelpOrderSuccess, updateHelpOrderSucces } from './actions';
 
 import api from '../../../services/api';
 
-export function* loadHelpOrder() {
+export function* loadHelpOrder({ payload }) {
   try {
-    const { data } = yield call(api.get, 'help-orders/unanswered');
+    const { page = 1 } = payload;
+    const { data } = yield call(api.get, `help-orders/unanswered?p=${page}`);
 
     if (data) {
       yield put(loadHelpOrderSuccess(data));
-
-      history.push('/dashboard/ajuda');
     } else toast.error('Falha ao buscar pedidos de ajuda');
   } catch (err) {
     toast.error(err.response.data.error);

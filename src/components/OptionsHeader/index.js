@@ -1,10 +1,17 @@
 import React from 'react';
+
 import { useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Input } from '@rocketseat/unform';
 import { MdAdd, MdKeyboardArrowLeft, MdCheck, MdSearch } from 'react-icons/md';
-import { resetPlanUpdating } from '../../store/modules/plan/actions';
-import { resetStudentUpdating } from '../../store/modules/student/actions';
+import {
+  loadStudentRequest,
+  resetStudentUpdating,
+} from '../../store/modules/student/actions';
+import {
+  loadPlanRequest,
+  resetPlanUpdating,
+} from '../../store/modules/plan/actions';
 import { resetEnrollmentUpdating } from '../../store/modules/enrollment/actions';
 import history from '../../services/history';
 
@@ -42,6 +49,11 @@ export default function OptionsHeader(props) {
     history.push(`/dashboard/${navSession}/cadastrar`);
   }
 
+  function handleSearch(name) {
+    if (navSession === 'aluno') dispatch(loadStudentRequest(1, name));
+    if (navSession === 'plano') dispatch(loadPlanRequest(1, name));
+  }
+
   return (
     <Container largeList={largeList}>
       <Content>
@@ -61,10 +73,15 @@ export default function OptionsHeader(props) {
           </AddButton>
 
           <SearchBox visible={searchBox} onSubmit={() => {}}>
-            <button type="submit">
+            <div>
               <MdSearch color="#999" size={20} />
-            </button>
-            <Input name="search" type="search" placeholder="Buscar por nome" />
+            </div>
+            <Input
+              name="search"
+              type="search"
+              placeholder="Buscar por nome"
+              onChange={e => handleSearch(e.target.value)}
+            />
           </SearchBox>
         </aside>
       </Content>
@@ -73,7 +90,7 @@ export default function OptionsHeader(props) {
 }
 
 OptionsHeader.propTypes = {
-  screenTitle: PropTypes.bool.isRequired,
+  screenTitle: PropTypes.string.isRequired,
   navSession: PropTypes.string,
   btnBack: PropTypes.bool,
   btnSave: PropTypes.bool,
