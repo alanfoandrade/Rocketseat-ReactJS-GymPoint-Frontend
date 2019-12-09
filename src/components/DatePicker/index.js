@@ -10,6 +10,16 @@ export default function DatePicker({ name, ...rest }) {
   const { fieldName, registerField, defaultValue, error } = useField(name);
   const [selected, setSelected] = useState(defaultValue);
 
+  const handleSelected = date => {
+    setSelected(date);
+  };
+
+  const DateButton = ({ value, onClick }) => (
+    <button type="button" className="date-button" onClick={onClick}>
+      {value}
+    </button>
+  );
+
   useEffect(() => {
     registerField({
       name: fieldName,
@@ -21,12 +31,6 @@ export default function DatePicker({ name, ...rest }) {
     });
   }, [ref.current, fieldName]); // eslint-disable-line
 
-  const DateButton = ({ value, onClick }) => (
-    <button type="button" className="date-button" onClick={onClick}>
-      {value}
-    </button>
-  );
-
   return (
     <>
       <ReactDatePicker
@@ -35,7 +39,7 @@ export default function DatePicker({ name, ...rest }) {
         locale={pt}
         dateFormat="dd 'de' MMMM 'de' yyyy"
         placeholderText="Selecione uma data"
-        onChange={date => setSelected(date)}
+        onChange={handleSelected}
         customInput={<DateButton />}
         ref={ref}
         {...rest}

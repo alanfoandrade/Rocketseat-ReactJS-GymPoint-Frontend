@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/control-has-associated-label */
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { confirmAlert } from 'react-confirm-alert';
 import history from '../../services/history';
@@ -15,33 +15,22 @@ import { PlanTable } from './styles';
 
 export default function Plan() {
   const dispatch = useDispatch();
-
   const { plans, page } = useSelector(state => state.plan);
-
   const [handlePage, sethandlePage] = useState(page);
 
-  useEffect(() => {
-    dispatch(loadPlanRequest(handlePage));
+  const pageChange = useCallback(
+    action => {
+      sethandlePage(action === 'back' ? handlePage - 1 : handlePage + 1);
+    },
+    [handlePage]
+  );
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [handlePage]);
-
-  useEffect(() => {
-    sethandlePage(page);
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [page]);
-
-  function pageChange(action) {
-    sethandlePage(action === 'back' ? handlePage - 1 : handlePage + 1);
-  }
-
-  function handleUpdate(plan) {
+  const handleUpdate = plan => {
     dispatch(setPlanUpdating(plan));
     history.push('/dashboard/plano/editar');
-  }
+  };
 
-  function handleDelete({ id, name }) {
+  const handleDelete = ({ id, name }) => {
     confirmAlert({
       title: 'Confirmação de exclusão',
       message: `Deseja realmente excluir o plano ${name}?`,
@@ -56,7 +45,19 @@ export default function Plan() {
         },
       ],
     });
-  }
+  };
+
+  useEffect(() => {
+    dispatch(loadPlanRequest(handlePage));
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [handlePage]);
+
+  useEffect(() => {
+    sethandlePage(page);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [page]);
 
   return (
     <DefaultLayout

@@ -1,9 +1,11 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import React from 'react';
+
+import React, { useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
-import { Form, Input } from '@rocketseat/unform';
 import * as Yup from 'yup';
+import { Form, Input } from '@rocketseat/unform';
+import MaskedInput from '../../../components/MaskedInput';
 import {
   createStudentRequest,
   updateStudentRequest,
@@ -17,18 +19,9 @@ const schema = Yup.object().shape({
   email: Yup.string()
     .email('E-mail inválido')
     .required('E-mail requerido'),
-  age: Yup.number()
-    .typeError('Idade requerida, apenas números')
-    .positive('Insira um valor maior que zero')
-    .required(),
-  weight: Yup.number()
-    .typeError('Peso requerido, decimais separados por ponto')
-    .positive('Insira um valor maior que zero')
-    .required(),
-  height: Yup.number()
-    .typeError('Altura requerida, decimais separados por ponto')
-    .positive('Insira um valor maior que zero')
-    .required(),
+  age: Yup.string().required('Peso requerido'),
+  weight: Yup.string().required('Peso requerido'),
+  height: Yup.string().required('Peso requerido'),
 });
 
 export default function FormStudent({ match }) {
@@ -37,25 +30,33 @@ export default function FormStudent({ match }) {
   const screenTitle =
     url === 'cadastrar' ? 'Cadastro de Aluno' : 'Edição de Aluno';
 
+  const dispatch = useDispatch();
   const { studentUpdating } = useSelector(state => state.student);
 
-  const dispatch = useDispatch();
+  const handleSubmit = useCallback(
+    ({ name, email, ...data }) => {
+      const age = data.age.split(' ', 1);
+      const weight = data.weight.replace(/,/g, '.').split(' ', 1);
+      const height = data.height.replace(/,/g, '.').split(' ', 1);
 
-  function handleSubmit({ name, email, age, weight, height }) {
-    if (url === 'cadastrar') {
-      dispatch(createStudentRequest(name, email, age, weight, height));
-    } else
-      dispatch(
-        updateStudentRequest(
-          studentUpdating.id,
-          name,
-          email,
-          age,
-          weight,
-          height
-        )
-      );
-  }
+      if (url === 'cadastrar') {
+        dispatch(
+          createStudentRequest(name, email, age[0], weight[0], height[0])
+        );
+      } else
+        dispatch(
+          updateStudentRequest(
+            studentUpdating.id,
+            name,
+            email,
+            age[0],
+            weight[0],
+            height[0]
+          )
+        );
+    },
+    [dispatch, studentUpdating.id, url]
+  );
 
   return (
     <DefaultLayout screenTitle={screenTitle} btnBack btnSave>
@@ -79,24 +80,41 @@ export default function FormStudent({ match }) {
           <InputContainer>
             <label>
               IDADE
-              <Input type="number" id="age" name="age" placeholder="Idade" />
+              <MaskedInput
+                id="age"
+                name="age"
+                suffix=" anos"
+                precision="0"
+                maxlength="7"
+                decimalSeparator=","
+                thousandSeparator=""
+                defaultValue={studentUpdating.age}
+              />
             </label>
             <label>
-              PESO (em kg)
-              <Input
-                type="number"
+              PESO
+              <MaskedInput
                 id="weight"
                 name="weight"
-                placeholder="Peso em kg"
+                suffix=" Kg"
+                precision="2"
+                maxlength="9"
+                decimalSeparator=","
+                thousandSeparator=""
+                defaultValue={studentUpdating.weight}
               />
             </label>
             <label>
               ALTURA
-              <Input
-                type="number"
+              <MaskedInput
                 id="height"
                 name="height"
-                placeholder="Altura"
+                suffix=" metros"
+                precision="2"
+                maxlength="12"
+                decimalSeparator=","
+                thousandSeparator=""
+                defaultValue={studentUpdating.height}
               />
             </label>
           </InputContainer>

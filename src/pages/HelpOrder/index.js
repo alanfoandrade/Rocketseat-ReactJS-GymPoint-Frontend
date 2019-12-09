@@ -1,9 +1,10 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 /* eslint-disable jsx-a11y/control-has-associated-label */
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Form, Input } from '@rocketseat/unform';
 import * as Yup from 'yup';
+
 import {
   loadHelpOrderRequest,
   updateHelpOrderRequest,
@@ -14,33 +15,35 @@ import { HelpOrderTable, AnswerModal } from './styles';
 import { StyledNav } from '../_layouts/default/styles';
 
 const schema = Yup.object().shape({
-  answer: Yup.string()
-    .typeError('Digite uma resposta')
-    .required('Resposta requerida'),
+  answer: Yup.string().required('Resposta requerida'),
 });
 
 export default function HelpOrder() {
   const dispatch = useDispatch();
+  const { helporders } = useSelector(state => state.helporder);
+  const [handlePage, sethandlePage] = useState(1);
 
   const [HelpAnswer, setHelpAnswer] = useState({
     question: null,
     visible: false,
   });
 
-  function handleModal(data) {
-    setHelpAnswer({
-      ...data,
-      visible: !HelpAnswer.visible,
-    });
-  }
+  const handleModal = useCallback(
+    data => {
+      setHelpAnswer({
+        ...data,
+        visible: !HelpAnswer.visible,
+      });
+    },
+    [HelpAnswer.visible]
+  );
 
-  const { helporders } = useSelector(state => state.helporder);
-
-  const [handlePage, sethandlePage] = useState(1);
-
-  function pageChange(action) {
-    sethandlePage(action === 'back' ? handlePage - 1 : handlePage + 1);
-  }
+  const pageChange = useCallback(
+    action => {
+      sethandlePage(action === 'back' ? handlePage - 1 : handlePage + 1);
+    },
+    [handlePage]
+  );
 
   useEffect(() => {
     dispatch(loadHelpOrderRequest(handlePage));
@@ -48,11 +51,14 @@ export default function HelpOrder() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [handlePage]);
 
-  function handleSubmit({ answer }) {
-    dispatch(updateHelpOrderRequest(HelpAnswer.id, answer));
+  const handleSubmit = useCallback(
+    ({ answer }) => {
+      dispatch(updateHelpOrderRequest(HelpAnswer.id, answer));
 
-    handleModal();
-  }
+      handleModal();
+    },
+    [HelpAnswer.id, dispatch, handleModal]
+  );
 
   return (
     <DefaultLayout

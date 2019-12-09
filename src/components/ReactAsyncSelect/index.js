@@ -12,31 +12,22 @@ export default function ReactAsyncSelect({
   label,
   options,
   multiple,
+  initialState,
   ...rest
 }) {
+  const dispatch = useDispatch();
   const ref = useRef(null);
   const { fieldName, registerField, defaultValue, error } = useField(name);
 
   const [optionSelected, setOptionSelected] = useState(
-    defaultValue && defaultValue.id
+    initialState && initialState.id
   );
 
-  function handleSelected(option) {
+  const handleSelected = option => {
     setOptionSelected(option.id);
-  }
+  };
 
-  useEffect(() => {
-    registerField({
-      name: fieldName,
-      ref: ref.current,
-      path: 'props.selected',
-      clearValue: selectRef => {
-        selectRef.select.clearValue();
-      },
-    });
-  }, [ref.current, fieldName]); // eslint-disable-line
-
-  function getDefaultValue() {
+  const getDefaultValue = () => {
     if (!defaultValue) return null;
 
     if (!multiple) {
@@ -44,9 +35,7 @@ export default function ReactAsyncSelect({
     }
 
     return options.filter(option => defaultValue.includes(option.id));
-  }
-
-  const dispatch = useDispatch();
+  };
 
   const getStudent = inputValue => {
     const prov = options.filter(i =>
@@ -62,6 +51,17 @@ export default function ReactAsyncSelect({
       resolve(getStudent(inputValue));
     });
 
+  useEffect(() => {
+    registerField({
+      name: fieldName,
+      ref: ref.current,
+      path: 'props.selected',
+      clearValue: selectRef => {
+        selectRef.select.clearValue();
+      },
+    });
+    }, [ref.current, fieldName]); // eslint-disable-line
+
   return (
     <>
       {label && <label htmlFor={fieldName}>{label}</label>}
@@ -71,7 +71,7 @@ export default function ReactAsyncSelect({
         aria-label={fieldName}
         defaultOptions={options}
         loadOptions={promiseOptions}
-        defaultValue={getDefaultValue()}
+        defaultValue={getDefaultValue}
         onInputChange={promiseOptions}
         selected={optionSelected}
         cacheOptions
@@ -91,6 +91,9 @@ export default function ReactAsyncSelect({
 ReactAsyncSelect.propTypes = {
   options: PropTypes.arrayOf(PropTypes.shape({}).isRequired).isRequired,
   name: PropTypes.string.isRequired,
+  initialState: PropTypes.shape({
+    id: PropTypes.number,
+  }),
   label: PropTypes.string,
   multiple: PropTypes.bool,
 };
@@ -98,4 +101,5 @@ ReactAsyncSelect.propTypes = {
 ReactAsyncSelect.defaultProps = {
   label: '',
   multiple: false,
+  initialState: {},
 };

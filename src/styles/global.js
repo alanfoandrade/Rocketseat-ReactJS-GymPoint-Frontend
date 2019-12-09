@@ -103,7 +103,8 @@ div.react-confirm-alert-button-group{
 
 div.react-datepicker__day--selected {
     background-color: ${colors.watermelon};
-    opacity:0.8;
+    transition: background 0.2s;
+    opacity:0.9;
 
     &:hover {
       background: ${darken(0.1, `${colors.watermelon}`)};

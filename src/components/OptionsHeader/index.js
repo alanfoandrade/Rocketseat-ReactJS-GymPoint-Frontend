@@ -37,22 +37,22 @@ export default function OptionsHeader(props) {
 
   const dispatch = useDispatch();
 
-  function handlegoBack() {
+  const handlegoBack = () => {
     history.goBack();
-  }
+  };
 
-  function handleAdd() {
+  const handleAdd = () => {
     dispatch(resetPlanUpdating());
     dispatch(resetStudentUpdating());
     dispatch(resetEnrollmentUpdating());
 
     history.push(`/dashboard/${navSession}/cadastrar`);
-  }
+  };
 
-  function handleSearch(name) {
+  const handleSearch = name => {
     if (navSession === 'aluno') dispatch(loadStudentRequest(1, name));
     if (navSession === 'plano') dispatch(loadPlanRequest(1, name));
-  }
+  };
 
   return (
     <Container largeList={largeList}>
@@ -60,19 +60,19 @@ export default function OptionsHeader(props) {
         <h1>{screenTitle}</h1>
 
         <aside>
-          <BackButton visible={btnBack} onClick={handlegoBack}>
+          <BackButton visible={btnBack ? 1 : 0} onClick={handlegoBack}>
             <MdKeyboardArrowLeft color="#fff" size={27} /> VOLTAR
           </BackButton>
 
-          <SaveButton form="handler" type="submit" visible={btnSave}>
+          <SaveButton visible={btnSave ? 1 : 0} form="handler" type="submit">
             <MdCheck color="#fff" size={22} /> SALVAR
           </SaveButton>
 
-          <AddButton visible={btnAdd} onClick={handleAdd}>
+          <AddButton visible={btnAdd ? 1 : 0} onClick={handleAdd}>
             <MdAdd color="#fff" size={22} /> CADASTRAR
           </AddButton>
 
-          <SearchBox visible={searchBox} onSubmit={() => {}}>
+          <SearchBox visible={searchBox ? 1 : 0} onSubmit={() => {}}>
             <div>
               <MdSearch color="#999" size={20} />
             </div>

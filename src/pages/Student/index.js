@@ -1,8 +1,8 @@
 /* eslint-disable jsx-a11y/control-has-associated-label */
 
-import { confirmAlert } from 'react-confirm-alert';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { confirmAlert } from 'react-confirm-alert';
 import history from '../../services/history';
 import {
   loadStudentRequest,
@@ -16,33 +16,22 @@ import { StudentTable } from './styles';
 
 export default function Student() {
   const dispatch = useDispatch();
-
   const { students, page } = useSelector(state => state.student);
-
   const [handlePage, sethandlePage] = useState(page);
 
-  useEffect(() => {
-    dispatch(loadStudentRequest(handlePage));
+  const pageChange = useCallback(
+    action => {
+      sethandlePage(action === 'back' ? handlePage - 1 : handlePage + 1);
+    },
+    [handlePage]
+  );
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [handlePage]);
-
-  useEffect(() => {
-    sethandlePage(page);
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [page]);
-
-  function pageChange(action) {
-    sethandlePage(action === 'back' ? handlePage - 1 : handlePage + 1);
-  }
-
-  function handleUpdate(student) {
+  const handleUpdate = student => {
     dispatch(setStudentUpdating(student));
     history.push('/dashboard/aluno/editar');
-  }
+  };
 
-  function handleDelete({ id, name }) {
+  const handleDelete = ({ id, name }) => {
     confirmAlert({
       title: 'Confirmação de exclusão',
       message: `Deseja realmente excluir o cadastro do aluno ${name}?`,
@@ -57,7 +46,19 @@ export default function Student() {
         },
       ],
     });
-  }
+  };
+
+  useEffect(() => {
+    dispatch(loadStudentRequest(handlePage));
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [handlePage]);
+
+  useEffect(() => {
+    sethandlePage(page);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [page]);
 
   return (
     <DefaultLayout

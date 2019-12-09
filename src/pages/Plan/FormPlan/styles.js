@@ -47,6 +47,7 @@ export const Content = styled.div`
 export const InputContainer = styled.div`
   display: flex;
   justify-content: space-between;
+  align-items: center;
   margin-top: 20px;
 
   label {
@@ -54,5 +55,31 @@ export const InputContainer = styled.div`
     font-size: 14px;
     font-weight: bold;
     width: 32%;
+
+    #price-input {
+      height: 45px;
+      display: flex;
+      align-items: center;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      margin-top: 8px;
+
+      input {
+        margin-top: 5px;
+        padding-left: 5px;
+      }
+
+      #price-prefix {
+        color: #666;
+        font-weight: normal;
+        padding-left: 16px;
+        font-size: 16px;
+      }
+    }
+
+    #price {
+      border: 0;
+      background: none;
+    }
   }
 `;

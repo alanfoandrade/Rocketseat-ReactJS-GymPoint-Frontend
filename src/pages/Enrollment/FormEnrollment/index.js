@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 
-import React, { useEffect, useState, useMemo } from 'react';
+import React, { useEffect, useState, useMemo, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Form, Input } from '@rocketseat/unform';
@@ -43,21 +43,10 @@ export default function FormEnrollment({ match }) {
 
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    dispatch(loadStudentRequest());
-    dispatch(loadPlanRequest());
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
   const { students } = useSelector(state => state.student);
-
   const { plans } = useSelector(state => state.plan);
-
   const { enrollUpdating } = useSelector(state => state.enrollment);
-
   const [handlePlan, setHandlePlan] = useState(enrollUpdating.plan || {});
-
   const [handleDate, setHandleDate] = useState(
     enrollUpdating.start_date ? parseISO(enrollUpdating.start_date) : new Date()
   );
@@ -82,28 +71,38 @@ export default function FormEnrollment({ match }) {
     [handlePlan]
   );
 
-  function handlePlanChange(plan) {
+  const handlePlanChange = plan => {
     setHandlePlan(plan);
-  }
+  };
 
-  function handleDateChange(date) {
+  const handleDateChange = date => {
     setHandleDate(date);
-  }
+  };
 
-  function handleSubmit({ student_id, plan_id, start_date }) {
-    if (url === 'cadastrar') {
-      dispatch(createEnrollmentRequest(student_id, plan_id, start_date));
-    } else {
-      dispatch(
-        updateEnrollmentRequest(
-          enrollUpdating.id,
-          student_id,
-          plan_id,
-          start_date
-        )
-      );
-    }
-  }
+  const handleSubmit = useCallback(
+    ({ student_id, plan_id, start_date }) => {
+      if (url === 'cadastrar') {
+        dispatch(createEnrollmentRequest(student_id, plan_id, start_date));
+      } else {
+        dispatch(
+          updateEnrollmentRequest(
+            enrollUpdating.id,
+            student_id,
+            plan_id,
+            start_date
+          )
+        );
+      }
+    },
+    [dispatch, enrollUpdating.id, url]
+  );
+
+  useEffect(() => {
+    dispatch(loadStudentRequest());
+    dispatch(loadPlanRequest());
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <DefaultLayout screenTitle={screenTitle} btnBack btnSave>
@@ -118,11 +117,12 @@ export default function FormEnrollment({ match }) {
             ALUNO
             <ReactAsyncSelect
               name="student_id"
-              placeholder="Selecione o plano"
+              placeholder="Selecione o aluno"
               options={students}
               cacheOptions
               getOptionLabel={option => option.name}
               getOptionValue={option => option.id}
+              initialState={enrollUpdating}
               defaultValue={
                 enrollUpdating.student && {
                   id: enrollUpdating.student.id,
@@ -141,7 +141,7 @@ export default function FormEnrollment({ match }) {
                 placeholder="Selecione o plano"
                 getOptionLabel={option => option.title}
                 getOptionValue={option => option.id}
-                onChange={option => handlePlanChange(option)}
+                onChange={handlePlanChange}
                 defaultValue={
                   enrollUpdating.plan && {
                     id: enrollUpdating.plan.id,

@@ -13,11 +13,10 @@ const ActiveStyle = {
 
 export default function Header(props) {
   const { largeList } = props;
-
   const dispatch = useDispatch();
   const profile = useSelector(state => state.provider.profile);
 
-  function handleSignOut() {
+  const handleSignOut = () => {
     confirmAlert({
       title: 'Confirmação de saída',
       message: 'Deseja realmente sair?',
@@ -32,7 +31,7 @@ export default function Header(props) {
         },
       ],
     });
-  }
+  };
 
   return (
     <Container largeList={largeList}>

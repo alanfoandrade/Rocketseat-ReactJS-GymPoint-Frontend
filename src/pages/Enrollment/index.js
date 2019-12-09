@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/control-has-associated-label */
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { confirmAlert } from 'react-confirm-alert';
 import { format, parseISO } from 'date-fns';
@@ -18,6 +18,7 @@ import { StyledNav } from '../_layouts/default/styles';
 
 export default function Enrollment() {
   const dispatch = useDispatch();
+  const [handlePage, sethandlePage] = useState(1);
 
   const enroll = useSelector(state => ({
     ...state.enrollment,
@@ -32,19 +33,14 @@ export default function Enrollment() {
     })),
   }));
 
-  const [handlePage, sethandlePage] = useState(1);
+  const pageChange = useCallback(
+    action => {
+      sethandlePage(action === 'back' ? handlePage - 1 : handlePage + 1);
+    },
+    [handlePage]
+  );
 
-  function pageChange(action) {
-    sethandlePage(action === 'back' ? handlePage - 1 : handlePage + 1);
-  }
-
-  useEffect(() => {
-    dispatch(loadEnrollmentRequest(handlePage));
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [handlePage]);
-
-  function handleDelete({ id, student }) {
+  const handleDelete = ({ id, student }) => {
     confirmAlert({
       title: 'Confirmação de exclusão',
       message: `Deseja realmente excluir a matrícula do aluno ${student.name}?`,
@@ -59,7 +55,13 @@ export default function Enrollment() {
         },
       ],
     });
-  }
+  };
+
+  useEffect(() => {
+    dispatch(loadEnrollmentRequest(handlePage));
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [handlePage]);
 
   function handleUpdate(enrollment) {
     dispatch(setEnrollUpdating(enrollment));

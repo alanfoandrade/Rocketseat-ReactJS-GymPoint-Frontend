@@ -22,9 +22,9 @@ export default function Login() {
   const dispatch = useDispatch();
   const loading = useSelector(state => state.auth.loading);
 
-  function handleSubmit({ email, password }) {
+  const handleSubmit = ({ email, password }) => {
     dispatch(signInRequest(email, password));
-  }
+  };
 
   return (
     <AuthLayout>

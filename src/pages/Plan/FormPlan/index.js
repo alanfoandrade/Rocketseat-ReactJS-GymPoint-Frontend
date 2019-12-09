@@ -1,9 +1,10 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
-import { Form, Input } from '@rocketseat/unform';
 import * as Yup from 'yup';
+import { Form, Input } from '@rocketseat/unform';
+import MaskedInput from '../../../components/MaskedInput';
 
 import { formatPriceBrl } from '../../../utils/format';
 import {
@@ -16,14 +17,8 @@ import { Content, InputContainer } from './styles';
 
 const schema = Yup.object().shape({
   title: Yup.string().required('Título requerido'),
-  length: Yup.number()
-    .typeError('Duração requerida, apenas números')
-    .positive('Insira um valor maior que zero')
-    .required(),
-  price: Yup.number()
-    .typeError('Preço requerido, decimais separados por ponto')
-    .positive('Insira um valor maior que zero')
-    .required(),
+  length: Yup.string().required('Duração requerida'),
+  price: Yup.string().required('Preço requerido'),
 });
 
 export default function FormPlan({ match }) {
@@ -33,9 +28,7 @@ export default function FormPlan({ match }) {
     url === 'cadastrar' ? 'Cadastro de Plano' : 'Edição de Plano';
 
   const dispatch = useDispatch();
-
   const { planUpdating } = useSelector(state => state.plan);
-
   const [PlanLength, setLength] = useState(planUpdating.length || 0);
   const [PlanPrice, setPrice] = useState(planUpdating.price || 0);
 
@@ -44,11 +37,27 @@ export default function FormPlan({ match }) {
     PlanLength,
   ]);
 
-  function handleSubmit({ title, length, price }) {
-    if (url === 'cadastrar') {
-      dispatch(createPlanRequest(title, length, price));
-    } else dispatch(updatePlanRequest(planUpdating.id, title, length, price));
-  }
+  const handleChangeLength = value => {
+    const lengthNumber = value.replace(/,/g, '.').split(' ', 1);
+    setLength(lengthNumber);
+  };
+
+  const handleChangePrice = value => {
+    const priceNumber = value.replace(/,/g, '.');
+    setPrice(priceNumber);
+  };
+
+  const handleSubmit = useCallback(
+    ({ title, ...data }) => {
+      const length = data.length.split(' ', 1);
+      const price = data.price.replace(/,/g, '.');
+
+      if (url === 'cadastrar') {
+        dispatch(createPlanRequest(title, length, price));
+      } else dispatch(updatePlanRequest(planUpdating.id, title, length, price));
+    },
+    [dispatch, planUpdating.id, url]
+  );
 
   return (
     <DefaultLayout screenTitle={screenTitle} btnBack btnSave>
@@ -63,23 +72,30 @@ export default function FormPlan({ match }) {
           <Input id="title" name="title" placeholder="Título do plano" />
           <InputContainer>
             <label>
-              DURAÇÃO (em meses)
-              <Input
-                type="number"
+              DURAÇÃO
+              <MaskedInput
                 id="length"
                 name="length"
-                placeholder="Duração (em meses)"
-                onChange={e => setLength(e.target.value)}
+                suffix=" meses"
+                precision="0"
+                maxlength="8"
+                defaultValue={planUpdating.length}
+                value={PlanLength}
+                onChange={handleChangeLength}
               />
             </label>
             <label>
-              PREÇO MENSAL (em R$)
-              <Input
-                type="number"
+              PREÇO MENSAL
+              <MaskedInput
                 id="price"
                 name="price"
-                placeholder="Preço mensal"
-                onChange={e => setPrice(e.target.value)}
+                precision="2"
+                maxlength="9"
+                decimalSeparator=","
+                thousandSeparator=""
+                defaultValue={planUpdating.price}
+                value={PlanPrice}
+                onChange={handleChangePrice}
               />
             </label>
             <label>
