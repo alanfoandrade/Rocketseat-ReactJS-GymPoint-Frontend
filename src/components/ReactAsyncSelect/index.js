@@ -89,7 +89,7 @@ export default function ReactAsyncSelect({
 }
 
 ReactAsyncSelect.propTypes = {
-  options: PropTypes.arrayOf(PropTypes.shape({}).isRequired).isRequired,
+  options: PropTypes.arrayOf(PropTypes.object).isRequired,
   name: PropTypes.string.isRequired,
   initialState: PropTypes.shape({
     id: PropTypes.number,

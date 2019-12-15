@@ -16,7 +16,6 @@ import {
   updateEnrollmentRequest,
 } from '../../../store/modules/enrollment/actions';
 import { loadPlanRequest } from '../../../store/modules/plan/actions';
-import { loadStudentRequest } from '../../../store/modules/student/actions';
 
 import DefaultLayout from '../../_layouts/default';
 import ReactAsyncSelect from '../../../components/ReactAsyncSelect';
@@ -98,7 +97,6 @@ export default function FormEnrollment({ match }) {
   );
 
   useEffect(() => {
-    dispatch(loadStudentRequest());
     dispatch(loadPlanRequest());
 
     // eslint-disable-next-line react-hooks/exhaustive-deps

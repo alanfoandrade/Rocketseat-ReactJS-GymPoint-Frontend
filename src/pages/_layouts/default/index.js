@@ -48,8 +48,8 @@ DefaultLayout.propTypes = {
   searchBox: PropTypes.bool,
   largeList: PropTypes.bool,
   children: PropTypes.oneOfType([
-    PropTypes.arrayOf(PropTypes.shape({})),
-    PropTypes.shape({}),
+    PropTypes.arrayOf(PropTypes.object),
+    PropTypes.object,
   ]).isRequired,
 };
 
